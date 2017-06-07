@@ -18,7 +18,7 @@ CTFFIND (Rohou and Grigorieff, 2015), gCTF (Zhang, 2016) and Xmipp CTF estimatio
 
 Up to this point the image processing pipeline is quite solid and may be executed in streaming without user intervention. Now, it is time to select (pick) particles. We have recently ported the eight different options available at \scipion  to streaming (see XXXX for details[**delarosa up to which point this is true]). In this way,  particles may be selected as soon as any new micrograph is available. We notice here that some of the ported algorithms require a training step in which either user intervention or information from a previous selection is need. For those users that execute several picking algorithms, the protocol \protocol{picking consensus} may be useful. \protocol{picking consensus}  calculates the agreement between different particle-picking algorithms and produces a list with the particle selected by most of them. [**ROB this algorithm is not in streaming yet, volunteers?]
 
-Two new protocols are under development and will join the described  pipeline in a near future. The first one will perform 2D classification and the second one will create a initial 3D map based on this classes. \scipion currently implements these protocols but these implementations are not adequate for real time processing.
+Two new protocols are under development and will join the described  pipeline in a near future. The first one will perform 2D classification and the second one will create a initial 3D map based on this classes. \scipion currently implements such protocols but the implementation is not adequate for real time processing.
 
 As commented in section \ref{overall}, to complement the streaming process we have developed a set of monitors and report possibilities. By default \protocol{system}, \protocol{CTF} and \protocol{report} monitors are executed. \protocol{System} monitor reports on  CPU and GPU utilization, memory consumption and disk I/O [**ROB TODO: last one to be done]. \protocol{CTF} monitor plots the CTF defocus and astigmatism  and it will raise an alarm if these parameters are not within a given range. Finally the \protocol{report} protocol pushes all the created plots and summaries to a web server 
 so this information can be accessed from outside.
@@ -57,6 +57,6 @@ The proposed pipeline offers quite flexibility to decide which particular algori
 %2D classify (either classes or identify outliers)
 %Initial model
 %More complex reports
-[** ROB This is already commented so this section disappears ]
+[** this section may disappear] 
 
 
