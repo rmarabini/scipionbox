@@ -1,0 +1,33 @@
+\section{Overall System Design: Worflows, Protocols, Monitors, Consensus and Beyond}
+\label{overall}
+Just like snowflakes, no two \scipionbox installation are alike. So far, the system is running in 
+three centralized facilities, and each installation has been tailored to the particular needs of each facility. The original design satisfied the requirements of our home facility (National Center for Biotechnology, Madrid, Spain), in which \scipionbox automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipionbox was deployed on XXXXX (a centralized facility located at Stockholm [**provide full identification @delarosa]) where a rigorous booking system is followed. There, \scipionbox was adapted to interface with this booking platform in order to produce better reports. Lately,  \scipionbox has been installed in a large Synchrotron  such as Diamond (Oxford, UK) where projects are handled by ISPyB (a customized lims -laboratory management information system- [**REF]) and data are saved on a distributed file system that heavily penalizes access to lists of files. In this environment, \scipionbox needs to constantly interchange information with ISPyB, and it cannot longer check if there is a new file in a particular storage device but must wait to be informed by the system that a new file has been created. All these particularities, that will be described in detail later, could only be handled thanks to a careful design that prioritizes flexibility at many levels. 
+
+\scipionbox uses the infrastructure provided by the Scipion project [Ref if not given already]
+that takes care of the creation and execution of workflows. These workflows may be imported from a set of predefined ones or created by the final users even if they have no programing skills.
+
+In most cases, after importing data, the first step will be to correct for beam-induced movement. For this task, \scipionbox allows you to choose between five different algorithms from three different labs (an exhaustive list containing the approximately 150 algorithms available in \scipionbox is at appendix XX). This multiplicity of possibilities is available at each different processing step although, if found overwhelming, may be ignored by choosing one of the default prepacked workflows.   
+
+In addition to offering algorithms (in Scipion lingo ``protocols'') we provide 
+a set of ``monitors'', which are protocols that  check on the progress of other protocols. The monitors are designed to produce analysis plots, generate reports or raise alerts when some problems are detected. A monitor example is the CTF monitor, that checks the computed defocus values for
+each micrograph and can raise an alert if the values are above or below certain thresholds.
+Monitors were also designed in a modular way to be modified or extended. 
+Monitors may send alert emails, continuously generate html files or interact with lims so that users and staff may easily follow the data acquisition and processing in-house or remotely. At the project end, a review of the processing history is produced by default.
+%This feature was very important since we knew that difference facilities will have different needs and criteria to be fulfilled.
+
+Another set of  specialized protocols are grouped under the name ``consensus''. For a given logical step (for example, particle picking) these protocols check if the datasets obtained from the same input data using different algorithm are identical. Continuing with the particle picking example, ``consensus picking'' will compare the particles selected for each one of the executed algorithms and report on the particles selected by most of them.
+
+\scipionbox is a streaming system that runs on threads. This is a significant difference from a script, since it means that each module is run independently. For example, Do you want to add a new protocol or monitor in your workflow while it is running? No problem, do it. \scipionbox allows workflows to be  modified on the fly. The modification will not interfere with the already executed steps and may take advantage from all already computed data. Did something go wrong and the microscope stopped? By default \scipionbox will stop after 2 hours with no microscope activity, but if you wish to continue your acquisition after a stop just press the continue button [*+ scipion 1.1.2], there is no need to restart from the beginning.
+
+Last but not least Scipion and therefore \scipionbox provides full data provenance. Data provenance is an important form of metadata that describes how a particular data set was generated, by detailing the steps, input data and parameters used in the computational process producing it. Data provenance guaranties reproducibility and traceability. Since provenance is solved by Scipion and not Scipionbox we will not discuss here how it is been achieved. We just note that, before choosing which data has to be stored, it is necessary to define how these data have to be structured so that they can be later recovered and understood. This abstract modeling of the data also simplifies the software interoperability offered by Scipion.
+
+
+%Standardization
+%User has access to all parameters used by algorithms (she may ignore them)
+%Project can be imported in scipion without further ado.
+%Gui vs programatico
+%Export options?
+
+
+ 
+

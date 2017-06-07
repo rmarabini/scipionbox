@@ -1,0 +1,29 @@
+\section{Discussion}
+[*+TODO]: Discuss the obtained numbers in the result section
+
+\section{Conclusions}
+
+The new generation of high-end cryo electron microscopes and direct electron detectors are behind the recent increase in cryo-EM  popularity. However, the run and maintenance costs of these new microscopes are high and can only be justified keeping the microscopes up and running 24 hours a day. In this way, microscopes tent to belong to centralize facilities where users are allocated microscope time (shifts) to perform a variety of research. Available shifts are a scarce commodity and therefore users (and staff) need to be able to monitor the quality of the acquisition process and get as soon as possible a first glimpse of the reconstructed specimen in order to guaranty an early detection of any issue. 
+
+ Despite workflow systems have been explored and used extensively in bioinformatics, there is little progress in that direction in the cryo-EM community. \scipionbox has been designed following and strict workflow paradigm. This approach is specially useful for tasks that need to go from a given start (movies) to a defined end (3D map) but there are many different paths (algorithms) to get there.
+ 
+ In a workflow approach, users (including microscope staff) can reasonably be expected to edit the paths. They can potentially play with the pipeline in ways that aren't possible when having a programmer write code for them. Furthermore, no having the processing path hardcoded in the program means you don't have to recompile, so changes can be quickly tested   even at run time.
+ 
+ \scipionbox workflow approach provides provenance (transparency) since for any created object (micrograph, CTFs, class, etc) it is stored which program creates it, using which parameters, and the exact path followed to create it.  In this way,  real tracking and reproducibility are provided. 
+
+ 
+\scipionbox is part of the \scipion package which is provided 
+freely as open source software. Online documentation
+describing \scipion download and installation is available
+at \url{http://scipion.cnb.csic.es/m/download_form/} and \url{https://github.com/I2PC/scipion/wiki/How-to-Install}, respectively.\\\\
+
+
+
+% to automatically process user data within a few minutes of data collection at a rate of a few terabytes per day.
+
+%In order to extract useful results from the image data, images must be processed using software which is complex, often lacking intuitive user interfaces and documentation
+
+
+
+
+ 

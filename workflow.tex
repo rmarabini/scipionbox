@@ -1,0 +1,62 @@
+\section{Processing with ScipionBox}
+
+\scipionbox is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow 
+over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipionbox has been installed.
+
+\subsection{CNB Facility}
+
+CNB setup is a quite straight forward one. Data sets are recorded using EPU which runs in a dedicated Windows box. Data are not locally saved but they are stored in a Linux server through a Samba share. The Linux server has two Ethernet connections, a 10 Gb point-to-point link with the Windows box and a 1 Gb link with the local network. It also has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 1 \textit{Quadro M4000} GPU. \scipionbox is installed in the Linux server. 
+
+The first decision a user must face is the backup policy. The recommended strategy is either to attach an external hard disk to the server or provide a remote storage location. \scipionbox will transfer both raw and processed data as soon as available. In this way, access to the Linux server seldom overlaps between two users and once a microscope shift ends, users do not need to wait for their data to be transferred. 
+
+Once the image processing pipeline begins \scipionbox will start two independent protocols in parallel. The first protocol estimates the camera gain at each pixel for a few  movies ([**REF coss article][**ROB TODO: this protocol is not in streaming]). In the CNB setup the microscope camera is calibrated and internally performs the gain correction before writing the movies so the estimated gain image should be almost constant and equal to 1. The output of this protocol serves as a verification of the validity of the experimental gain image for the whole data set. The second protocol performs Scipion direct detector movie alignment. Currently \scipionbox offers  four  methods  for  DDD  movie  alignment: motioncorr (Li et al., 2013),
+correlation (an unpublished CPU version of the motioncorr method developed in Xmipp),
+unblur (Grant and Grigorieff, 2015) and optical flow (Abrishami et al., 2015). Within \scipionbox, movie frames can be aligned using any one of these approaches or any combination. Following the standard processing workflow, the resulting micrographs are screened to eliminate those with excessive astigmatism or drift. Scipion provides three CTF estimation methods:
+CTFFIND (Rohou and Grigorieff, 2015), gCTF (Zhang, 2016) and Xmipp CTF estimation (Sorzano et al., 2007; Vargas et al., 2013). At this point the user may compute the CTFs using several algorithms and compare them with the protocol \protocol{CTF consensus} that report up to which frequency two estimation of the same micrograph are equivalent. Further automatic filtering based on CTF is available through the protocol \protocol{CTF filtering} that selects micrographs based on the astigmatism, resolution and defocus. Another criteria for CTF selection is iciness, that is,  the ratio of the intensity in the resolution band between 3.5 and 3.9 \AA, and between 80 and 30 \AA, which gives a good estimate of the ice crystal content of the vitreous specimen.
+
+[**ROB TODO: I have not added the average protocol since I do not know exactly what it does, if somebody wants to contribute here go ahead]
+
+Up to this point the image processing pipeline is quite solid and may be executed in streaming without user intervention. Now, it is time to select (pick) particles. We have recently ported the eight different options available at \scipion  to streaming (see XXXX for details[**delarosa up to which point this is true]). In this way,  particles may be selected as soon as any new micrograph is available. We notice here that some of the ported algorithms require a training step in which either user intervention or information from a previous selection is need. For those users that execute several picking algorithms, the protocol \protocol{picking consensus} may be useful. \protocol{picking consensus}  calculates the agreement between different particle-picking algorithms and produces a list with the particle selected by most of them. [**ROB this algorithm is not in streaming yet, volunteers?]
+
+Two new protocols are under development and will join the described  pipeline in a near future. The first one will perform 2D classification and the second one will create a initial 3D map based on this classes. \scipion currently implements these protocols but these implementations are not adequate for real time processing.
+
+As commented in section \ref{overall}, to complement the streaming process we have developed a set of monitors and report possibilities. By default \protocol{system}, \protocol{CTF} and \protocol{report} monitors are executed. \protocol{System} monitor reports on  CPU and GPU utilization, memory consumption and disk I/O [**ROB TODO: last one to be done]. \protocol{CTF} monitor plots the CTF defocus and astigmatism  and it will raise an alarm if these parameters are not within a given range. Finally the \protocol{report} protocol pushes all the created plots and summaries to a web server 
+so this information can be accessed from outside.
+
+The proposed pipeline offers quite flexibility to decide which particular algorithms will be used by a given user. At CNB (and collaborating institutions) we collect protocol usage statistics and sort the different algorithms by popularity.  This information is available at  \url{http://calm-shelf-73264.herokuapp.com/report_protocols/protocolTable/} and may help users to select   between the different algorithms.
+
+\subsection{XX Facility}
+
+\subsection{YY Facility}
+
+%cat /proc/cpuinfo
+%\begin{figure}[h]
+%\centering
+%     \includegraphics[width=50mm]{Images/to-be-done}
+%     \caption{TODO: DROP? I do not know if an image showing CNB setup is needed this image should show CNB setup, microscope connected to control-PC which saves data in \scipionbox using samba. Show Ethernet speed. Soy connection to external disk/host.
+%     Describe number GPUs, CPUs, SSD disks.
+%     }
+%     \label{cnbsetup}
+%\end{figure}
+
+
+
+%One of the most frequent requests by both beginners, and even experienced digital darkroom workers, is for detailed step-by-step instructions on how to perform various basic tasks in Photoshop.
+
+%One of the key goals of ScipionBox is to guarantee interoperability between algorithms implemented in different software packages.  The possibility of choosing among several algorithms is provided at all levels of the workflow, in many cases adding the possibility of comparing the results of these methods to detect inconsistencies.  
+%and do not need to be concerned with how the rest of the workflow is allocated.
+
+%ScipionBox design is agnostic to a particular workflow or software packet.
+
+%%Export options?
+
+
+\subsection{What will do in future}
+%Particle picking
+%Extract particle
+%2D classify (either classes or identify outliers)
+%Initial model
+%More complex reports
+[** ROB This is already commented so this section disappears ]
+
+

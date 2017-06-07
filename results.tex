@@ -1,0 +1,39 @@
+\section{Results: Speed and performance}
+
+%Our objective is to build a real time high performance pipeline for image processing  in electron microscopy that involves a continual input, process and output of data. 
+Reliable software is a prerequisite for successful operation of a modern electron microscope facility but it is not longer enough since data processing speed is not a negligible aspect of the acquisition pipeline. Nowadays, image processing  in electron microscopy involves a continual input, process and output of data in a time period similar to the acquisition rate.
+
+In order to understand the limitations of the streaming model for data processing we have tested and compared the speed performance of the different steps involved in the data acquisition and processing. The measured data provides values for guiding the design and implementation of new workflows and protocols.
+ 
+\subsection{ TODO LIST:}
+
+Prerequisites:
+\begin{itemize}
+   \item create protocol that mimic set of movie acquisition
+   \item modify protocol system so it reports on IO
+\end{itemize}
+ 
+\noindent
+TODO (requires microscope time):
+\begin{itemize}
+   \item Check samba maximum speed between microscope PC and scipion box (IDEA: use DiskSpd o similar with no load in the computers, https://blogs.technet.microsoft.com/josebda/2014/10/13/diskspd-powershell-and-storage-performance-measuring-iops-throughput-and-latency-for-both-local-disks-and-smb-file-shares/)
+   
+   \item Repeat above measurement with the  microscope working: a) alone, b) doing backup to local external usb disk , c) doing backup to local disk and another user downloading files, d) remote backup plus second user downloading files
+   
+   \item in all the following the backup must be running (at least at CNB)
+   
+   \item Motioncor execution (1 vs 2-3-4 threads). In one GPU and in 2 if possible
+   
+   \item Now add CTFfind - gCTF (comment on ultra fast programs as gctf)
+   
+   \item Add particle picking and extract if available
+   
+   \item All the time we need CPU, memory, GPU and IO plots
+      
+   \item Running things up to extract  how much available CPU, GPU time do we have?
+   
+   \item Can we say something about using ssd disk versus plain sata
+   
+\end{itemize}
+   
+
