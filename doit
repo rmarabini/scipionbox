@@ -1,0 +1,4 @@
+pdflatex scipionbox.tex
+kile scipionbox.tex&
+okular scipionbox.pdf&
+latexmk -pvc -pdf scipionbox.tex 
