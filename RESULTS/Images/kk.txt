@@ -1,0 +1,25 @@
+inbox
+└── 20170713_roberto_ribosome
+    ├── GRID_01
+    │   ├── ATLAS
+    │   └── DATA
+    ├── GRID_02
+    │   ├── ATLAS
+    │   └── DATA
+    ├── GRID_0X
+    │   ├── ATLAS
+    │   └── DATA
+    ├── GRID_12
+    │   ├── ATLAS
+    │   └── DATA
+    └── ScipionUserData
+        └── projects
+            └── 20170713_roberto_ribosome
+                ├── Logs
+                │   ├── data.log
+                │   └── uuid.log
+                ├── project.sqlite
+                ├── Runs
+                ├── settings.sqlite
+                ├── Tmp
+                └── Uploads
