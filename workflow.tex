@@ -1,9 +1,14 @@
 \section{Processing with ScipionBox}
 
+%Comment change in scale in the three examples: CNB, SNC and DIAMOND
+%more local, SNC national, Diamond international. Portal infrastructure has
+%different levels.
+
 \scipionbox is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow 
 over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipionbox has been installed.
 
 \subsection{CNB Facility}
+%Here there are Scipion general features and CNB specific. Move the general to the Processing with Scipion section.
 
 CNB setup is a quite straight forward one. Data sets are recorded using EPU which runs in a dedicated Windows box. Data are not locally saved but they are stored in a Linux server through a Samba share. The Linux server has two Ethernet connections, a 10 Gb point-to-point link with the Windows box and a 1 Gb link with the local network. It also has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 1 \textit{Quadro M4000} GPU. \scipionbox is installed in the Linux server. 
 
@@ -25,10 +30,39 @@ so this information can be accessed from outside.
 
 The proposed pipeline offers quite flexibility to decide which particular algorithms will be used by a given user. At CNB (and collaborating institutions) we collect protocol usage statistics and sort the different algorithms by popularity.  This information is available at  \url{http://calm-shelf-73264.herokuapp.com/report_protocols/protocolTable/} and may help users to select   between the different algorithms.
 
-\subsection{XX Facility}
+\subsection{Swedish National CryoEM Facility}
 
-\subsection{YY Facility}
+\begin{verbatim}
+We need to cover here differences with CNB setup
+ CNB is a stand alone center. It does not work as a real National Facility
+ SNC already had an application portal and Scipion needs to interact
+ with it. 
+ - initial script
+ - same as CNB until session end
+ - when acquisistion done contaCT PORTAL AND UPLOAD REPORT
+\end{verbatim}
 
+\subsection{Diamond Light Source Facility??? or eBIC???}
+
+\begin{verbatim}
+ 
+We need to cover here differences with CNB setup
+
+ DEVELOPER RELATED
+ * Describe infrastructure in diamond: file system (distributed, user permissions),
+                                       no graphical output, queues, 
+ * Describe Scipion modification:      import (detect new files by socket message)
+                                       monitor, report to ISPyB 
+                                       scipion headless
+                                       execution as script
+
+USER RELATED
+ * how users interact with scipion?
+ * how data is visualized?
+\end{verbatim}
+
+%%%Diamond Light Source Facility  ends here%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %cat /proc/cpuinfo
 %\begin{figure}[h]
 %\centering
@@ -40,15 +74,6 @@ The proposed pipeline offers quite flexibility to decide which particular algori
 %\end{figure}
 
 
-
-%One of the most frequent requests by both beginners, and even experienced digital darkroom workers, is for detailed step-by-step instructions on how to perform various basic tasks in Photoshop.
-
-%One of the key goals of ScipionBox is to guarantee interoperability between algorithms implemented in different software packages.  The possibility of choosing among several algorithms is provided at all levels of the workflow, in many cases adding the possibility of comparing the results of these methods to detect inconsistencies.  
-%and do not need to be concerned with how the rest of the workflow is allocated.
-
-%ScipionBox design is agnostic to a particular workflow or software packet.
-
-%%Export options?
 
 
 \subsection{What will do in future}

@@ -4,146 +4,146 @@
 Reliable software is a prerequisite for successful operation of a modern electron microscope facility but it is not longer enough since data processing speed is not a negligible aspect of the acquisition pipeline. Nowadays, image processing  in electron microscopy involves a continual input, process and output of data in a time period similar to the acquisition rate.
 
 In order to understand the limitations of the streaming model for data processing we have tested and compared the speed performance of the different steps involved in the data acquisition and processing. The measured data provides values for guiding the design and implementation of new workflows and protocols.
- 
-\subsection{ TODO LIST:}
 
-Prerequisites:
-\begin{itemize}
-   \item create protocol that mimic set of movie acquisition
-   \item modify protocol system so it reports on IO
-\end{itemize}
- 
-\noindent
-TODO (requires microscope time):
-\begin{itemize}
-   \item Check samba maximum speed between microscope PC and scipion box. We will use iperf since there is version for windows and linux.
-   \begin{lstlisting}
-        1) check network speed
-        install  (may be iptraf also)
-        Server -> iperf -s -p 80
-        Client -> iperf -c server.cnb.csic.es -p 80
-        
-        2) meassure samba
-        install Diskspd
-        https://unhandled.wordpress.com/2016/07/20/madness-testing-smb-direct-network-throughput-with-diskspd/
-        http://stealthpuppy.com/replicate-2015-folder-redirection-test/
-        http://darklight.pro/using-microsoft-diskspd-to-test-starwind-virtual-san-storage-performance/
-        (Compare local and remote storage)
-        diskspd.exe -c2G -d120 -w100 -t1 (-o8) -b8K -h -L \\mb-win81\diskspd\testfile.dat
-        -c -> file size
-        -d -> time at least 120 (600 better)
-        -w -> 100 write, 0 read
-        -t -> threadas per file (1 or 2)
-        -L -> capture latency information
-        -h -> disable hardware, software cache 
-        -b -> size of a read/write operation
-        -o 	Outstanding I/Os (queue depth) per worker thread. Setting this higher increases the intensity of the test, which pushes your storage harder.??
-    \end{lstlisting}
-   
-   \begin{lstlisting}
-#smb.conf
-   read raw = Yes
-write raw = Yes
-socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=131072 SO_SNDBUF=131072
-min receivefile size = 16384
-use sendfile = true
-aio read size = 16384
-aio write size = 16384
-    \end{lstlisting}
-\begin{verbatim}
-         OREALLY:
-     TCP_NODELAY
-Have the server send as many packets as necessary to keep delay low. This is
-used on telnet connections to give good response time, and is used—some-
-what counter-intuitively—to get good speed even when doing small requests
-or  when  acknowledgments  are  delayed  (as  seems  to  occur  with  Microsoft
-TCP/IP).  This  is  worth  a  30–50  percent  speedup  by  itself.  Incidentally,  in
-Samba 2.0.4,
-socket options = TCP_NODELAY
-became the default value for
-that option.
-IPTOS_LOWDELAY
-This is another option that trades off throughput for lower delay, but which
-affects  routers  and  other  systems,  not  the  server.  All  the  IPTOS  options  are
-new; they’re not supported by all operating systems and routers. If they are
-supported, set
-IPTOS_LOWDELAY
- whenever you set
-TCP_NODELAY
-.
-SO_SNDBUF and SO_RCVBUF
-The send and receive buffers can often be the reset to a value higher than that
-of  the  operating  system.  This  yields  a  marginal  increase  of  speed  (until  it
-reaches a point of diminishing returns).
-
-read raw and write raw
-These are important performance configuration options; they enable Samba to use
-large reads and writes to the network, of up to 64KB in a single SMB request. They
-also  require  the  largest  SMB  packet  structures,
-
-\end{verbatim}
-
-    
-    \item Repeat above measurement with the  microscope working: a) alone, b) doing backup to local external usb disk , c) doing backup to local disk and another user downloading files, d) remote backup plus second user downloading files
-   
-   \item in all the following the backup must be running (at least at CNB)
-   
-   \item Motioncor execution (1 vs 2-3-4 threads). In one GPU and in 2 if possible
-   
-   \item Now add CTFfind - gCTF (comment on ultra fast programs as gctf)
-   
-   \item Add particle picking and extract if available
-   
-   \item All the time we need CPU, memory, GPU and IO plots
-      
-   \item Running things up to extract  how much available CPU, GPU time do we have?
-   
-   \item Can we say something about using ssd disk versus plain sata
-   
-   \item Report on project size
-   
-   \item what happens if I double size
-   
-   \item save raw data instead of corrected by the gain
-   
-   \item how to measure scipion overhead?????
-   
-   \item Laura backup in amazon and ctffind4
-   \begin{lstlisting}
-   rsync -aHAXxv --numeric-ids --delete --progress -e "ssh -T -c arcfour -o Compression=no -x" [source_dir] [dest_host:/dest_dir]
-   \end{lstlisting}
-   \begin{itemize}
-    \item some preliminary tests with Laura
-    \item no matter what machine we choose the network speed with CNB is 250 Mbits/s
-    \item rsync report 25MB/seconds so there is not need to play here
-    \item disk is ssd
-    \item OS: Ubuntu 14.04, 8 CPUs 32GB, m4.2xlarge
-    rsync -av --progress -e "ssh -i ~/Documents/CNB/Cloud/AWS/rmarabini.pem" VMImages/ScipionCloud-v1.1-beta.ova ubuntu@54.154.136.191:
-
-#Comando iperf en server
-
-sudo iperf -s -p 80
-
-------------------------------------------------------------
-Server listening on TCP port 80
-TCP window size: 85.3 KByte (default)
-------------------------------------------------------------
-[  4] local 172.31.37.239 port 80 connected with 150.244.85.94 port 54796
-[ ID] Interval       Transfer     Bandwidth
-[  4]  0.0-10.0 sec   282 MBytes   236 Mbits/sec
-[  5] local 172.31.37.239 port 80 connected with 150.244.85.94 port 54832
-[  5]  0.0-10.1 sec   297 MBytes   247 Mbits/sec
-[  4] local 172.31.37.239 port 80 connected with 150.244.85.94 port 55290
-[  4]  0.0-40.1 sec  1.18 GBytes   253 Mbits/sec
-
-
-#Comando iperf en client (copiar durante 40 sec)
-
-iperf -c 54.154.136.191 -p 80 -t 40
-
-   \end{itemize}
-
-
-\end{itemize}
-   
+% \subsection{ TODO LIST:}
+% 
+% Prerequisites:
+% \begin{itemize}
+%    \item create protocol that mimic set of movie acquisition
+%    \item modify protocol system so it reports on IO
+% \end{itemize}
+%  
+% \noindent
+% TODO (requires microscope time):
+% \begin{itemize}
+%    \item Check samba maximum speed between microscope PC and scipion box. We will use iperf since there is version for windows and linux.
+%    \begin{lstlisting}
+%         1) check network speed
+%         install  (may be iptraf also)
+%         Server -> iperf -s -p 80
+%         Client -> iperf -c server.cnb.csic.es -p 80
+%         
+%         2) meassure samba
+%         install Diskspd
+%         https://unhandled.wordpress.com/2016/07/20/madness-testing-smb-direct-network-throughput-with-diskspd/
+%         http://stealthpuppy.com/replicate-2015-folder-redirection-test/
+%         http://darklight.pro/using-microsoft-diskspd-to-test-starwind-virtual-san-storage-performance/
+%         (Compare local and remote storage)
+%         diskspd.exe -c2G -d120 -w100 -t1 (-o8) -b8K -h -L \\mb-win81\diskspd\testfile.dat
+%         -c -> file size
+%         -d -> time at least 120 (600 better)
+%         -w -> 100 write, 0 read
+%         -t -> threadas per file (1 or 2)
+%         -L -> capture latency information
+%         -h -> disable hardware, software cache 
+%         -b -> size of a read/write operation
+%         -o 	Outstanding I/Os (queue depth) per worker thread. Setting this higher increases the intensity of the test, which pushes your storage harder.??
+%     \end{lstlisting}
+%    
+%    \begin{lstlisting}
+% #smb.conf
+%    read raw = Yes
+% write raw = Yes
+% socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=131072 SO_SNDBUF=131072
+% min receivefile size = 16384
+% use sendfile = true
+% aio read size = 16384
+% aio write size = 16384
+%     \end{lstlisting}
+% \begin{verbatim}
+%          OREALLY:
+%      TCP_NODELAY
+% Have the server send as many packets as necessary to keep delay low. This is
+% used on telnet connections to give good response time, and is used—some-
+% what counter-intuitively—to get good speed even when doing small requests
+% or  when  acknowledgments  are  delayed  (as  seems  to  occur  with  Microsoft
+% TCP/IP).  This  is  worth  a  30–50  percent  speedup  by  itself.  Incidentally,  in
+% Samba 2.0.4,
+% socket options = TCP_NODELAY
+% became the default value for
+% that option.
+% IPTOS_LOWDELAY
+% This is another option that trades off throughput for lower delay, but which
+% affects  routers  and  other  systems,  not  the  server.  All  the  IPTOS  options  are
+% new; they’re not supported by all operating systems and routers. If they are
+% supported, set
+% IPTOS_LOWDELAY
+%  whenever you set
+% TCP_NODELAY
+% .
+% SO_SNDBUF and SO_RCVBUF
+% The send and receive buffers can often be the reset to a value higher than that
+% of  the  operating  system.  This  yields  a  marginal  increase  of  speed  (until  it
+% reaches a point of diminishing returns).
+% 
+% read raw and write raw
+% These are important performance configuration options; they enable Samba to use
+% large reads and writes to the network, of up to 64KB in a single SMB request. They
+% also  require  the  largest  SMB  packet  structures,
+% 
+% \end{verbatim}
+% 
+%     
+%     \item Repeat above measurement with the  microscope working: a) alone, b) doing backup to local external usb disk , c) doing backup to local disk and another user downloading files, d) remote backup plus second user downloading files
+%    
+%    \item in all the following the backup must be running (at least at CNB)
+%    
+%    \item Motioncor execution (1 vs 2-3-4 threads). In one GPU and in 2 if possible
+%    
+%    \item Now add CTFfind - gCTF (comment on ultra fast programs as gctf)
+%    
+%    \item Add particle picking and extract if available
+%    
+%    \item All the time we need CPU, memory, GPU and IO plots
+%       
+%    \item Running things up to extract  how much available CPU, GPU time do we have?
+%    
+%    \item Can we say something about using ssd disk versus plain sata
+%    
+%    \item Report on project size
+%    
+%    \item what happens if I double size
+%    
+%    \item save raw data instead of corrected by the gain
+%    
+%    \item how to measure scipion overhead?????
+%    
+%    \item Laura backup in amazon and ctffind4
+%    \begin{lstlisting}
+%    rsync -aHAXxv --numeric-ids --delete --progress -e "ssh -T -c arcfour -o Compression=no -x" [source_dir] [dest_host:/dest_dir]
+%    \end{lstlisting}
+%    \begin{itemize}
+%     \item some preliminary tests with Laura
+%     \item no matter what machine we choose the network speed with CNB is 250 Mbits/s
+%     \item rsync report 25MB/seconds so there is not need to play here
+%     \item disk is ssd
+%     \item OS: Ubuntu 14.04, 8 CPUs 32GB, m4.2xlarge
+%     rsync -av --progress -e "ssh -i ~/Documents/CNB/Cloud/AWS/rmarabini.pem" VMImages/ScipionCloud-v1.1-beta.ova ubuntu@54.154.136.191:
+% 
+% #Comando iperf en server
+% 
+% sudo iperf -s -p 80
+% 
+% ------------------------------------------------------------
+% Server listening on TCP port 80
+% TCP window size: 85.3 KByte (default)
+% ------------------------------------------------------------
+% [  4] local 172.31.37.239 port 80 connected with 150.244.85.94 port 54796
+% [ ID] Interval       Transfer     Bandwidth
+% [  4]  0.0-10.0 sec   282 MBytes   236 Mbits/sec
+% [  5] local 172.31.37.239 port 80 connected with 150.244.85.94 port 54832
+% [  5]  0.0-10.1 sec   297 MBytes   247 Mbits/sec
+% [  4] local 172.31.37.239 port 80 connected with 150.244.85.94 port 55290
+% [  4]  0.0-40.1 sec  1.18 GBytes   253 Mbits/sec
+% 
+% 
+% #Comando iperf en client (copiar durante 40 sec)
+% 
+% iperf -c 54.154.136.191 -p 80 -t 40
+% 
+%    \end{itemize}
+% 
+% 
+% \end{itemize}
+%    
 
