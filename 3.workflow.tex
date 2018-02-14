@@ -4,13 +4,22 @@
 %more local, SNC national, Diamond international. Portal infrastructure has
 %different levels.
 
-\scipionbox is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow 
-over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipionbox has been installed.
+\scipion is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow 
+over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipion has been installed.
 
 \subsection{CNB Facility}
 %Here there are Scipion general features and CNB specific. Move the general to the Processing with Scipion section.
 
-CNB setup is a quite straight forward one. Data sets are recorded using EPU which runs in a dedicated Windows box. Data are not locally saved but they are stored in a Linux server through a Samba share. The Linux server has two Ethernet connections, a 10 Gb point-to-point link with the Windows box and a 1 Gb link with the local network. It also has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 1 \textit{Quadro M4000} GPU. \scipionbox is installed in the Linux server. 
+CNB setup is a quite straight forward one. From a network point of view there are three different levels of accessibility: (1) a private network that cannot be accessed by regular users, (2) the CNB LAN (local area network)  that can be accessed by any user which works inside the hosting  institution and (3) finally, there is a single computer that may be accessed from outside the institution and therefore, it can see the WAN (wide area network).
+
+Data sets are recorded using EPU. The microscope control system has a 70 TB NAS (Network-attached storage) unit for saving movies as they are obtained (we will refer to this NAS as microscope-NAS). This storage unit is shared through a Samba share and connected to the private network using a 10Gb connexion. \scipion is executed on a Linux server which has two 1Gb NICs (network interface controllers) that connect it to the private and the LAN networks (we will refer to this machine as \scipionbox). This machine has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 2 \textit{Quadro M4000} GPUs. Finally, a second NAS with 4 1Gb NICs is linked to the private, LAN and WAN networks (we will refer to this second NAS as output-NAS).
+
+The data flow is a follows: (a) the microscope system stores movies in the microscope-NAS, (b) when executing alignment-movie protocols \scipionbox will temporary read the movies from 
+the microscope-NAS but will not store them locally, (c) each hour, output-NAS will connect to \scipionbox and copy or update the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup the \scipion project and the movies to a USB disk or serve this information through the Internet and (e) in parallel \scipionbox transfers to  output-NAS different html reports that may be checked by users or staff with a HTML browser.
+[** create figure]
+
+Discuss transfer rates
+Discuss typical workflow
 
 The first decision a user must face is the backup policy. The recommended strategy is either to attach an external hard disk to the server or provide a remote storage location. \scipionbox will transfer both raw and processed data as soon as available. In this way, access to the Linux server seldom overlaps between two users and once a microscope shift ends, users do not need to wait for their data to be transferred. 
 
