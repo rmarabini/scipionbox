@@ -1,7 +1,9 @@
 \subsection{CNB Facility}
 %Here there are Scipion general features and CNB specific. Move the general to the Processing with Scipion section.
 
-CNB setup is a quite straight forward one. From a network point of view there are three different levels of accessibility: (1) a private network that cannot be accessed by regular users, (2) the CNB LAN (local area network)  that can be accessed by any user which works inside the hosting  institution and (3) finally, there is a single computer that may be accessed from outside the institution and therefore, it can see the WAN (wide area network).
+At the beginning CNB setup was a quite straight forward one, movies where stored in the  same machine that ran \Scipion and processed data was saved to external USB hard disks by the same machine. The situation changed when the new Falcon-III camera  
+
+From a network point of view there are three different levels of accessibility: (1) a private network that cannot be accessed by regular users, (2) the CNB LAN (local area network)  that can be accessed by any user which works inside the hosting  institution and (3) finally, there is a single computer that may be accessed from outside the institution and therefore, it can see the WAN (wide area network).
 
 Data sets are recorded using EPU. The microscope control system has a 70 TB NAS (Network-attached storage) unit for saving movies as they are obtained (we will refer to this NAS as microscope-NAS). This storage unit is shared through a Samba share and connected to the private network using a 10Gb connexion. \scipion is executed on a Linux server which has two 1Gb NICs (network interface controllers) that connect it to the private and the LAN networks (we will refer to this machine as \scipionbox). This machine has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 2 \textit{Quadro M4000} GPUs. Finally, a second NAS with 4 1Gb NICs is linked to the private, LAN and WAN networks (we will refer to this second NAS as output-NAS).
 
