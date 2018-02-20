@@ -1,9 +1,7 @@
 \section{\scipion Setup in the Different Facilities}
 
-%Comment change in scale in the three examples: CNB, SNC and DIAMOND
-%more local, SNC national, Diamond international. Portal infrastructure has
-%different levels.
-
+The data flow created by an electron microscope requires a careful design of the IT infrastructures.  Different facilities has adopted different solutions and therefore, 
+how \scipion  access data and interchange information is very facility dependent. In this section we discuss  the different solutions applied in the different facilities in which \scipion is running.
 
 So far, \scipion is being used routinely in four Cryo-EM facilities: \emph{Science for life Laboratory} (SciLifeLab, \url{http://www.scilifelab.se}),  \emph{European Synchrotron Radiation Facility} (ESRF, \url{http://www.esrf.eu/}), \emph{Diamond Light Source Synchrotron} (Diamond, \url{http://www.diamond.ac.uk}) and \emph{National Center for Biotechnology} (CNB, \url{http://www.cnb.csic.es}). \scipion original design satisfied the requirements of our home facility (CNB), in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm) where a rigorous booking system is followed. There, \scipion was adapted to interface with this booking platform in order to produce better reports. Lately,  \scipion has been installed in a large synchrotron  such as ESRF and Diamond  where projects are handled by ISPyB (a customized laboratory management information system -LIMBS- \citep{Delageniere2011}) and data are saved on a distributed file system that heavily penalizes access to lists of files. In this environment, \scipion needs to constantly interchange information with ISPyB, and it cannot longer check if there is a new file in a particular storage device but must wait to be informed by the system that a new file has been created. All these particularities, that will be described in detail in the following, could only be handled thanks to a careful design that prioritizes flexibility at many levels. 
 

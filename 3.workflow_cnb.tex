@@ -1,8 +1,9 @@
 \subsection{CNB}
 
-We are going to structure this section in three pats. In the first one we discuss the network setup that allow us to move the data from the microscope to the user laboratory. Then we present the standard image processing workflow and finally we comment on the additional software (different from \scipion) used in process data.
+This section in divided in two parts. In the first one we discuss the network setup that allow us to move the data from the microscope to the user laboratory. Then  we comment on an additional software (called  \emadmin) that connects \scipion with the microscope acquisition 
+software (EPU) and records the facility activity.
 
-\subsubsection{Networking}
+\subsubsection{Network Setup}
 
 At the beginning CNB networking setup was a quite straight forward one, movies where stored in the  same machine that ran \scipion and processed data was saved to external USB hard disks by this same machine. The situation changed when the new Falcon-III detector was installed. After that, data was produced at sustained speeds as high as 90 MB/sec (when acquiring four movies by hole in lineal mode) and the main problem became to move smoothly the data through the entire pipeline from the microscope to the final user laboratory. In the following we describe such a pipeline.
 
@@ -11,12 +12,23 @@ From a network point of view there are three different levels of accessibility: 
 Data sets are recorded using EPU. The microscope control system has a 70 TB NAS (Network-attached storage) unit for saving movies as they are obtained (we will refer to this NAS as microscope-NAS). This storage unit is shared through a Samba share and connected to the private network using a 10Gb connexion. \scipion is executed on a Linux server which has two 1Gb NICs (network interface controllers) that connect it to the private and the LAN networks respectively (we will refer to this machine as \scipionbox). \scipionbox has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 2 \textit{Quadro M4000} GPUs. Finally, a second NAS with 4 1Gb NICs is linked to the private, LAN and WAN networks (we will refer to this second NAS as output-NAS).
 
 The data flow is a follows: (a) the microscope system stores movies in the microscope-NAS, (b) when executing alignment-movie protocols \scipionbox will temporary read the movies from 
-the microscope-NAS but will not store them locally, (c) each hour, output-NAS will connect to \scipionbox and copy or update the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup the \scipion project and the movies to a USB disk or serve this information through the Internet and (e) in parallel \scipionbox transfers to  output-NAS different html reports that may be checked by users or staff with a HTML browser (see \url{http://nolan.cnb.csic.es/scipionbox}).
+the microscope-NAS but will not store them locally, (c) each hour, output-NAS will connect to \scipionbox and copy or update the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup the \scipion project and the movies to a USB disk or serve this information through the Internet and, (e) in parallel, \scipionbox transfers to  output-NAS different html reports that may be checked by users or staff with a HTML browser (see \url{http://nolan.cnb.csic.es/scipionbox}).
 
-Although we try to discourage the use of external USB hard disks versus network. At present, this is the preferred option for more of our users.  USB 3.0 drives can theoretically handle data flows of 300 MB/s, but our experience is that, in this busy environment, many of them  have trouble exceeding 50 MB/s. In the ideal situation both raw and processed data are transfered as soon as available. In this way, access to the servers seldom overlaps between two users and once a microscope shift ends, users do not need to wait for their data to be transferred. fggdfgdsgdsfgdf. Comment on ssh cifers
+Although we try to discourage the use of external USB hard disks versus network as way of retrieving the raw and processing data, this is the preferred option for more of our users.
+USB 3.0 drives can theoretically handle data flows of 300 MB/s, but our experience is that, in this busy environment, many of them  have trouble exceeding 50 MB/s. In most cases, 50 MB/s is enough to transfer the data before the following microscope shift starts. Nevertheless, real-world is tough and it happens that two, or even three,  users try to download their data simultaneously. Fortunately, output-NAS works as front-end and isolates the data acquiring and processing infrastructure from the user downloading. Network users access to output-NAS using a chrooted common account. This account only allows rsync connections and make impossible to retrieve data if the name of the project to be downloaded is unknown. In order to speed up transfer weak ciphers (as \emph{arcfour}) has been activated in output-NAS.     
 
-comment on iperf and smbdata
+\subsubsection{\emadmin}
 
+\emadmin was born as a script that created a normalized tree of directories  in which to store the movies acqured by the microscope and help users to choose between a few predetermined image processing workflows. At present it was grown in a client-server application that in addition to the old script capacities it has incorporate the following functions:
 
+\begin{enumerate}
+ \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this files as use them to create new predetermined workflows.
+ \item Automatic creation of pdf user's report containing: microscope acquisition parameters and histograms summarizing data resolution and  defocus. 
+ \item The above mentioned information is stored in a database for further analysis. By default the system plots the  average resolution and astigmatism of the different acquisitions versus time
+ \item Remote management. \emadmin is a client server application, the client maybe executed in a machine different from the one that executes \scipion
+ \item Automatic backup of the \scipion project
+ \item \scipion is able to create live html reports on the image acquisition process. \emadmin keeps track of all of them and facilitates the access to this information
+\end{enumerate}
 
-\subsubsection{EMadmin}
+\emadmin is free software available at github repository (\url{https://github.com/rmarabini/webservices/tree/master/EMadmin}). You are welcomed to try it but the software is provided as it is and no support or maintenance service is offered. 
+
