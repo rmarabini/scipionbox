@@ -1,16 +1,6 @@
 
 \subsection{Swedish National CryoEM Facility}
 
-\begin{verbatim}
-We need to cover here differences with CNB setup
- CNB is a stand alone center. It does not work as a real National Facility
- SNC already had an application portal and Scipion needs to interact
- with it. 
- - initial script
- - same as CNB until session end
- - when acquisistion done contaCT PORTAL AND UPLOAD REPORT
-\end{verbatim}
-
 The Swedish National Cryo-EM Facility offers access to state-of-the-art equipment and expertise 
 in single particle cryo-EM and cryo electron tomography (cryo-ET). The Facility has two nodes: at SciLifeLab 
 in Stockholm and at Umeå University. SciLifeLab in Stockholm offers single-particle service with a 
@@ -30,7 +20,7 @@ for on the fly data processing. Before, there were some home-made scripts to per
 and CTF estimation (with Gctf). The microscope operators recognized the importance of  
 a more general framework with the possibility to be extended with new programs. Another strong point was the 
 the availability of graphical tools for data analysis and quick feedback about the data collection. Initially, the 
-same setup script from the CNB was used, but it has some limitations for this more complex setup with more 
+same setup script from the CNB was used, but it had some limitations for this more complex setup with more 
 requirements. In the following sections we will briefly describe the computational infrastructure at the
 SciLifeLab node and the implementation of a Session Wizard to automate the initial setup while fetching 
 information from other sources external to Scipion. 
@@ -40,4 +30,42 @@ information from other sources external to Scipion.
 
 
 \subsubsection{Session Wizard}
+
+The initial attempt to ease the setup of Scipion projects for stream processing was based  
+on the original script developed at the CNB. But it was difficult to reuse the existing code due to a different folder
+structure and, more important, a different logic about users and microscopes management. To address the new set
+of requirements, a new ``wizard'' is being developed at SciLifeLab and can be found in the following open source repository: 
+\url{https://github.com/delarosatrevin/scipion-session}
+
+For this new wizard, a basic data model was designed representing the current processing and data 
+organization at SciLifeLab. The model is composed by the following entities:
+
+\begin{itemize}
+\setlength\itemsep{0em}
+ \item \textit{User}: represents all persons that can book microscope time or are registered in the Application Portal 
+ related to national projects.
+ \item \textit{Reservation}:  is a resource (e.g, Krios, Talos, Vitrobot, etc) booking for a given period of time.
+ \item \textit{Order}:  is a given national project with an unique identifier in the Application Portal
+ \item \textit{Project}:  can be a either a national project (related to a given Order) or an internal project.
+ \item \textit{Session}:  stores information about the usage of the micrograph for a given day.
+\end{itemize}
+
+When an user starts a data collection, the wizard is also executed using the command \textit{session-titan} 
+(or \textit{session-talos}). The wizard will fetch the reservations for this day using a webservices API provided by 
+the Booking System and will check wich user is operating the microscope. From the reservation information, 
+the wizard will also detect if it is an internal project or a national facility project. If the latter,
+more information will be retrieved from the Applicacion Portal (such as principal investigator, project code, 
+contact person or invoice address). After gathering all this information, the wizard setup the Scipion project
+for streaming processing. For example, the movies-import protocol will already point to the location where
+the files will be written for this session. Moreover, taking into account which microscope-camera is being 
+used, the files pattern can be inferred. 
+
+The current implementation of the wizard stores each session in a simple database file. This database, together
+with extra information from the Booking System and the Appplication Portal, is used to generate reports for 
+a given period with the associated invoices. The generation of a session report is under development, that 
+will provide a summary and useful information for users to access the acquired data. The existing data model 
+represents the specify usage at the SciLifeLab facility and there are not inmediate plans to make it more 
+general and easy to reuse. Nonetheless, the model is quite simple and should to be difficult to modify it to fit 
+other requirements. 
+
 
