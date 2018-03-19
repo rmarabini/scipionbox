@@ -27,7 +27,36 @@ information from other sources external to Scipion.
 
 
 \subsubsection{Infrastructure}
-[** to be done]
+At the heart of the SciLifeLab computational infrastructure is a storage and pre-processing server (the
+staging server). This machine has roughly 200 TB of storage (4 ZFS RAIDZ2 pools
+with 11 HDDs each), 2 NVIDIA GeForce GTX 1070 GPUs, 2 Intel Xeon E5-2630v4 CPUs
+(10 cores, 2.2 GHz, HT), 384 GB RAM, and a dual-port 10 GbE network card. The
+storage pool is exported via NFS and Samba, so the microscope computers can
+write data there directly and other machines can access it.
+
+Unfortunately the K2 computer writes data to a local SSD RAID, the Falcon-III to
+a dedicated storage server (the offload server), in order to avoid interruption
+of data collection due to network issues. So when users start data collection,
+they start a script that continously moves the produced data to the staging
+server.
+
+By having all data on the staging server, in an organized folder structure, we
+can run pre-processing directly on the server. If processing is started soon
+after data collection the incoming file data should still be in RAM and does not
+have to be read from disk, which is important with performance in mind. Users
+can copy their data to external USB drives from two workstations in the
+microscope room, that have access to the storage pool via NFS.
+There is also a dedicated download server with access to the NFS export,
+reachable from the Internet. Here users can log in to a restricted shell that
+allows downloads via rsync (over SSH) or SFTP. 
+
+All these computers are conntected to a 10 GbE network switch. This is a private
+network without external access. The only machine accessible from the Internet
+is the data download server, which has a dual-port 10 GbE network adapter (one
+used for the private network, one for the external network). Both the K2
+computer and the Falcon-III offload server had one unused 10GbE interface that
+could be used to connect them to our private network, without having to
+interfere with the default setup.
 
 \subsubsection{Session Wizard}
 
