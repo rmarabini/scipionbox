@@ -1,21 +1,18 @@
 
-\subsection{Diamond Light Source Facility??? or eBIC???}
+\subsection{The eBIC facility at Diamond Light Source}
 
-\begin{verbatim}
- 
-We need to cover here differences with CNB setup
+Diamond Light Source is the UK National Synchrotron User Facility.  As such, it provides access to large-scale experimental facilities to the UK and worldwide scientific communities to conduct experiments that are not possible in their home laboratories.  As a consequence of this national role, Diamond has significant experience at managing many visiting scientists and user experiments, and the associated data and post-processing.  %In the area of Macromolecular Crystallography, this has become a highly automated process which allows users to visualise electron density maps within minutes of the experiment being completed (REF. Aller P et al Methods Mol Biol 2015)
+%The recent ``Revolution Resolution'' (REF. Kulbrandt W, Science 2014) in cryoEM has transformed the impact and demand of cryoEM in Structural Biology. However, the instrumentation and running costs of the latest generation of EM necessary for high-end cryoEM is beyond scope of all but the best-funded home laboratories. Due to the huge demand for high-end microscope access, 
+The electron Bio-Imaging Centre (eBIC) was set up at Diamond~\citep{diamond2017}. The centre houses four Thermofisher Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
 
- DEVELOPER RELATED
- * Describe infrastructure in diamond: file system (distributed, user permissions),
-                                       no graphical output, queues, 
- * Describe Scipion modification:      import (detect new files by socket message)
-                                       monitor, report to ISPyB 
-                                       scipion headless
-                                       execution as script
+Diamond has thousands of users every year, both academic and commercial, and it is vital that their data is kept secure and confidential. A user management system has been developed which allocates each user with a unique federal identity (IDs), and associates those user IDs with the experiments in which they partake in. Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. Users may access their data through ISPyB \citep{ispb2011},  a Laboratory Information Management System (LIMS) combining sample tracking and experiment reporting  %The link between the user and their visits enables data management such as archiving data to a long-term tape storage system, or the Laboratory Information Management System ISPyB (REF. Delageniere et al Bioinformatics 2011). In contrast to the CNB setup, Diamond has integrated the microscopes in much the same fashion to that of the beamlines at the facility, as is shown in figure X
 
-USER RELATED
- * how users interact with scipion?
- * how data is visualized?
-\end{verbatim}
+Data is collected onto a local machine %in a similar way to the CNB setup, but 
+and then immediately moved via 10Gbps Ethernet to the associated visit directory in the centralised storage, a multi Petabyte GPFS High Performance Parallel file system.  Once the raw data is present on the GPFS system, high speed interconnects to the central cluster enable rapid data processing. %Services such as these are shared amongst the whole facility allowing for flexibility in their deployment and generally allowing better service.
+
+Once the data has reached the central file system, it is available to be processed by Scipion.  This process is facilitated by the use of a Scipion-workflow-template which enable novice users to trigger semi-customised on the fly processing. This template consists of a small UI (figure XX) which allows the user to put in the specific values pertinent to their experiment, namely the session ID (or visit number), which microscope they are using, and several other key data collection parameters.  Once set this makes use of a global template for Scipion as set up by the eBIC team, and substitutes the appropriate information into it, and then saves it to disk.
+
+Following this Diamond makes use of a central ActiveMQ [** what is this? a queue system] service which is triggered upon the template file being available in the visit directory, and runs a headless (i.e. without UI) version of Scipion which takes the template and executes in streaming mode.  THIS SHOULD PROBABLY INCLUDE SOMETHING ABOUT THE DETECTION OF NEW FILES BY SOCKET MESSAGE, BUT I DON’T KNOW HOW THIS WORKS. Me neither, I thought it polled the filesystem?
 
 
+To monitor the progress of the automatic processes, the Scipion pipeline at Diamond also includes custom nodes which allow it to interface with ISPyB.  This provides the users with a web interface showing general metadata about their experiment as well as new real-time updates on steps of the process and relevant output such as motion corrected images, drift values and CTF images (Figure XXX)
