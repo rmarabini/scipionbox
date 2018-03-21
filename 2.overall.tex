@@ -12,7 +12,7 @@ In this way, a new level of parallelization has been reached since the  data gen
 Using threads, a programmer can effectively create two or more tasks that run at the same time and share the protocol resources (i.e. memory). 
 %is based on periodic updates of the protocol input and output data during the image processing. 
 %Each protocol execution in \scipion is an independent process that can create processing threads. 
-Each protocol that works in streaming mode has one of its threads monitoring input and updating output  while other threads take care of the data processing. This clear separation between data access and data processing marks an important difference between running a script or using \scipion. Since the later facilitates a form of computing in which several computations are executed  concurrently, instead of sequentially. Moreover, \scipion workflow engine, allows users to modify the workflow on the fly without modifying a single code line.
+Each protocol that works in streaming mode has one of its threads monitoring input and updating output  while other threads take care of the data processing. This clear separation between data access and data processing marks an important difference between running a script or using \scipion since it facilitates a form of computing in which several computations are executed  concurrently, instead of sequentially. Moreover, \scipion workflow engine, allows users to modify the workflow on the fly without modifying a single code line.
 %In practice, the latter follows  a more general and extensible approach that allows users to modify the workflow on the fly without modifying a single code line. %Moreover, it also allows to quickly develop new workflows .
 
 %Since allow to a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially
@@ -28,12 +28,28 @@ Each protocol that works in streaming mode has one of its threads monitoring inp
 Since \scipion original publication we have developed many \emph{metaprotocols}, that is, 
 protocols that either check the progress of other protocols or compare the results of equivalent protocols.
 
-The first type of metaprotocols are called \emph{monitors} and are used to produce live analysis plots, generate reports or raise alerts when some problems are detected. A monitor example is the \protocol{CTF-monitor}, that checks the computed defocus values for each micrograph as they are generated. CTF-monitor may raise an alert if the defocus values are above or below certain thresholds and continuously generate HTML files so that users and staff may easily follow the data acquisition and processing in-house or remotely. An example of this reports may be seen at \url{http://nolan.cnb.csic.es/scipionbox/} [**ROB NOTE: select a nice one an complete URL, I need to ask to javi chichon]%At the project's end, a review of the processing history is produced. [** URL to report example?]
+The first type of metaprotocols are called \emph{monitors} and are used to produce live analysis plots, generate reports or raise alerts when some problems are detected. A monitor example is the \protocol{CTF-monitor}, that checks the computed defocus values for each micrograph as they are generated. \protocol{CTF-monitor} may raise an alert if the defocus values are above or below certain thresholds and continuously generate HTML files so that users and staff may easily follow the data acquisition and processing either in-house or remotely. An example of these reports may be seen at \url{http://nolan.cnb.csic.es/scipionbox/} [**ROB NOTE: select a nice one an complete URL, I need to ask to javi chichon]%At the project's end, a review of the processing history is produced. [** URL to report example?]
 %This feature was very important since we knew that difference facilities will have different needs and criteria to be fulfilled.
 
-The second set of metaprotocols are grouped under the name \emph{consensus}. For a given logical step (for example, particle picking) these protocols check if the datasets obtained from the same input data using a different algorithm are consistent. Continuing with the particle picking example, \emph{consensus picking} will compare the particles selected for each one of the executed particle-picking algorithms and produce as output a particle set containing those particles selected by most of the algorithms.
+The second set of metaprotocols are grouped under the name \emph{consensus}. For a given logical step (for example, particle picking) these protocols check if the datasets obtained from the same input data using a different algorithm are consistent. Continuing with the particle picking example, \protocol{consensus picking} will compare the particles selected for each one of the executed particle-picking algorithms and produce as output a particle set containing those particles selected by most of the algorithms.
 
-We would like to finish this section assuring that despite the modifications introduced to \scipion data and process model, the framework provides full data provenance. That is, for any object created by a  protocol, \scipion always annotate how this object has been generated by detailing: the steps, input data and parameters used in the computation. Data provenance guaranties reproducibility and traceability. %Since provenance is solved by Scipion and not Scipionbox we will not discuss here how it is been achieved. We just note that, before choosing which data has to be stored, it is necessary to define how these data have to be structured so that they can be later recovered and understood . %This abstract modeling of the data also simplifies the software interoperability offered by Scipion.
+We would like to finish this section assuring that despite the modifications introduced to \scipion data and process model, the framework provides full data provenance. That is, \scipion provides detailed information about the origin of the data XXXXX
+
+ easily share traceable information and research results is central to their use.
+
+in such a way  ensuring reproducibility in scientific research
+
+that data will be traceable and reproducible
+
+
+
+keeps a historical record of how the data was generated reproducibility and traceability.
+
+
+
+
+
+%for any object created by a  protocol, \scipion always annotate how this object has been generated by detailing: the steps, input data and parameters used in the computation. Data provenance guaranties reproducibility and traceability. %Since provenance is solved by Scipion and not Scipionbox we will not discuss here how it is been achieved. We just note that, before choosing which data has to be stored, it is necessary to define how these data have to be structured so that they can be later recovered and understood . %This abstract modeling of the data also simplifies the software interoperability offered by Scipion.
 
 
 %Standardization
