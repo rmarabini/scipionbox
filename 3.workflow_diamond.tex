@@ -13,7 +13,29 @@ and then immediately moved via 10Gbps Ethernet to the associated visit directory
 
 Once the data has reached the central file system, it is available to be processed by Scipion.  This process is facilitated by the use of a Scipion-workflow-template which enable novice users to trigger semi-customised on the fly processing. This template consists of a small UI (figure XX) which allows the user to put in the specific values pertinent to their experiment, namely the session ID (or visit number), which microscope they are using, and several other key data collection parameters.  Once set this makes use of a global template for Scipion as set up by the eBIC team, and substitutes the appropriate information into it, and then saves it to disk.
 
+
+
+
 Following this Diamond makes use of a central ActiveMQ [** what is this? a queue system] service which is triggered upon the template file being available in the visit directory, and runs a headless (i.e. without UI) version of Scipion which takes the template and executes in streaming mode.  THIS SHOULD PROBABLY INCLUDE SOMETHING ABOUT THE DETECTION OF NEW FILES BY SOCKET MESSAGE, BUT I DON’T KNOW HOW THIS WORKS. Me neither, I thought it polled the filesystem?
 
 
 To monitor the progress of the automatic processes, the Scipion pipeline at Diamond also includes custom nodes which allow it to interface with ISPyB.  This provides the users with a web interface showing general metadata about their experiment as well as new real-time updates on steps of the process and relevant output such as motion corrected images, drift values and CTF images (Figure XXX)
+
+\subsubsection{Additional Software Developments: }
+
+\subsection{Additional Sotware Developement: ISyB monitor}
+
+0) headless <-- no GUI
+1) Problem: access file system: very spensive using glob
+2) Modify import movies so it can start  sever that waits until "something" tells it that there is a new file. [quien reporta activeQ como]
+3) import though webservice << rama de diamond. pull request
+[** quien crea el sistema de directorios, create project]
+4) Wizard that creates normalized enviroment? Scipion workflow customiser. -> template scipion
+5) IspyB monitor -> connect to IspyB.(thumbnail-mic and ctf, defocus, resolution)
+[headless version]
+urls: where is this in scipion (given that there is no SNRF and Diamond)
+
+where is scipion monitor customizer
+
+
+>>> que desencadena el proceso?

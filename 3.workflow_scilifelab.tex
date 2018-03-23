@@ -6,9 +6,10 @@ Talos Arctica for sample optimisation and a Titan Krios for high-resolution data
 
 The facilities can be accessed by Swedish researchers through 
 a peer-reviewed process. Applications can be submitted through an application portal (\url{https://cryoem.scilifelab.se/}). % and will be evaluated once every three months based on their scientific merit and technical feasibility by a national Project Evaluation Committee. %On the other side, some time of the facility is reserved for internal research groups at Stockholm University. 
-Internally, a online booking system centralize the reservations of the microscopes and other instruments [**ROB-JM name of the booking system and reference???]. 
+Internally, a online booking system called \emph{Booked Scheduler} centralizes the reservations of the microscopes and other instruments. 
 
-At the beginning of 2016, the Cryo-EM facility at SciLifeLab became one of the early adopters of \scipion for on the fly data processing. Before, there were some home-made scripts to perform motion correction (with motioncorr) and CTF estimation (with Gctf) but the microscope operators recognized the importance of a more general framework. In particular, they were interested in the possibility of modify easily the processing workflow as well as provide users and staff with  graphical tools for data analysis and quick feedback regarding the data collection. Initially, the same setup script used at CNB was adopted, but it did not fully satisfy the facility requirements and a new one has been developed. In the following sections we will briefly describe the computational infrastructure at the SciLifeLab node [** The one in  Stockholm?] and the implementation of a Session Wizard to automate the initial setup while fetching information from other sources external to \scipion. 
+At the beginning of 2016, the Cryo-EM facility at SciLifeLab became one of the early adopters of \scipion for on the fly data processing. Before, there were some home-made scripts to perform motion correction (with motioncorr) and CTF estimation (with Gctf) but the microscope operators recognized the importance of a more general framework. In particular, they were interested in the possibility of modify easily the processing workflow as well as provide users and staff with  graphical tools for data analysis and quick feedback regarding the data collection. Initially, the same setup script used at CNB was adopted, but it did not fully satisfy the facility requirements and a new one has been developed. In the following sections we will briefly describe the computational infrastructure at the SciLifeLab node at Stockholm and the implementation of a Session Wizard to automate the initial setup while fetching information from other sources external to \scipion. 
+[** thalos falcon III, titan k2 and falcon III]
 
 \subsubsection{Network Setup and IT Infrastructure}
 At the heart of the SciLifeLab computational infrastructure is a storage and pre-processing server (the
@@ -35,9 +36,10 @@ network without external access. The only machine accessible from the Internet
 is the data download server, which has a dual-port 10 GbE network adapter (one
 used for the private network, one for the external network). %Both the K2 computer and the Falcon-III dedicated storage server had one unused 10GbE interface that could be used to connect them to our private network, without having to interfere with the default setup.
 
-\subsubsection{Session Wizard}
+\subsubsection{Additional Software Developments: \emph{Session Wizard}}
 In order to interface \scipion with the microscope infrastructure an upgraded version of the original script developed at the CNB was used. Unfortunately, it was difficult to reuse the existing code due to a different folder structure and, more important, a different logic about users and microscopes management. To address the new set of requirements, a new wizard is under development at SciLifeLab. For this new wizard, a basic data model was designed representing the current processing and data organization at SciLifeLab. The model is composed by the following entities:
 
+[** quitar modelo de datos]
 \begin{itemize}
 \setlength\itemsep{0em}
  \item \textit{User}: represents all persons that can book microscope time or are registered in the Application Portal 

@@ -1,4 +1,4 @@
 pdflatex scipionbox.tex
-kile *.tex&
+kile ?.*.tex large.bib&
 okular scipionbox.pdf&
 latexmk -pvc -pdf scipionbox.tex 
