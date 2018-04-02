@@ -1,41 +1,32 @@
 
-\subsection{Case 3: Scipion at eBIC facility at Diamond Light Source}
+\subsection{Case 3: Scipion at eBIC facility (Diamond Light Source)}
 
 Diamond Light Source is the UK National Synchrotron User Facility.  As such, it provides access to large-scale experimental facilities to the UK and worldwide scientific communities to conduct experiments that are not possible in their home laboratories.  As a consequence of this national role, Diamond has significant experience at managing many visiting scientists and user experiments, and the associated data and post-processing.  %In the area of Macromolecular Crystallography, this has become a highly automated process which allows users to visualise electron density maps within minutes of the experiment being completed (REF. Aller P et al Methods Mol Biol 2015)
 %The recent ``Revolution Resolution'' (REF. Kulbrandt W, Science 2014) in cryoEM has transformed the impact and demand of cryoEM in Structural Biology. However, the instrumentation and running costs of the latest generation of EM necessary for high-end cryoEM is beyond scope of all but the best-funded home laboratories. Due to the huge demand for high-end microscope access, 
-The electron Bio-Imaging Centre (eBIC) was set up at Diamond~\citep{diamond2017}. The centre houses four Thermofisher Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
+Recently, the electron Bio-Imaging Centre (eBIC) has been set up at Diamond~\citep{diamond2017}. The centre houses four Thermofisher Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
 
-Diamond has thousands of users every year, both academic and commercial, and it is vital that their data is kept secure and confidential. A user management system has been developed which allocates each user with a unique federal identity (IDs), and associates those user IDs with the experiments in which they partake in. Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. Users may access their data through ISPyB \citep{ispb2011},  a Laboratory Information Management System (LIMS) combining sample tracking and experiment reporting  %The link between the user and their visits enables data management such as archiving data to a long-term tape storage system, or the Laboratory Information Management System ISPyB (REF. Delageniere et al Bioinformatics 2011). In contrast to the CNB setup, Diamond has integrated the microscopes in much the same fashion to that of the beamlines at the facility, as is shown in figure X
 \subsubsection{Network Setup and IT Infrastructure}
 
+Diamond has thousands of users every year, both academic and commercial, and it is vital that their data is kept secure and confidential. A user management system has been developed which allocates each user with a unique federal identity (IDs), and associates those user IDs with the experiments in which they partake in. Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. Users may access their data through ISPyB \citep{ispb2011},  a Laboratory Information Management System (LIMS) combining sample tracking and experiment reporting  %The link between the user and their visits enables data management such as archiving data to a long-term tape storage system, or the Laboratory Information Management System ISPyB (REF. Delageniere et al Bioinformatics 2011). In contrast to the CNB setup, Diamond has integrated the microscopes in much the same fashion to that of the beamlines at the facility, as is shown in figure X
+
 Data is collected onto a local machine %in a similar way to the CNB setup, but 
-and then immediately moved via 10Gbps Ethernet to the associated visit directory in the centralised storage, a multi Petabyte GPFS High Performance Parallel file system.  Once the raw data is present on the GPFS system, high speed interconnects to the central cluster enable rapid data processing. %Services such as these are shared amongst the whole facility allowing for flexibility in their deployment and generally allowing better service.
+and then immediately moved via 10Gbps Ethernet to the associated visit directory in the centralized storage, a multi Petabyte GPFS high performance parallel file system.  Once the raw data is present on the GPFS system, high speed interconnects to the central cluster enable rapid data processing. %Services such as these are shared amongst the whole facility allowing for flexibility in their deployment and generally allowing better service.
 
-Once the data has reached the central file system, it is available to be processed by Scipion.  This process is facilitated by the use of a Scipion-workflow-template which enable novice users to trigger semi-customised on the fly processing. This template consists of a small UI (figure XX) which allows the user to put in the specific values pertinent to their experiment, namely the session ID (or visit number), which microscope they are using, and several other key data collection parameters.  Once set this makes use of a global template for Scipion as set up by the eBIC team, and substitutes the appropriate information into it, and then saves it to disk.
+Diamond IT infrastructure is complex and requires to integrate a large collection of heterogeneous systems. In this environment a major problem is to achieve interaction and data exchange between diverse applications. One of the solutions to this problem has been to implement \emph{indirect communication} through a message queuing system. Simply said; a message queuing system is a software where queues can be defined, applications may connect to the queue and send or retrieve  messages. A message can include any kind of information, for example, about a process/task that should start on another application (that could be on another server). %The message queuing software stores the messages until a receiving application connects and takes a message off the queue. The receiving application then processes the message in an appropriate manner.
 
+\subsection{Additional Software Developments: ISyB monitor, Scipion Headless}
 
+From the image processing point of view, in Diamond, a typical cryoEM session starts by launching a custom made script that performs two actions. First, it  allows users to specify values pertinent to their experiment, namely the session ID (or visit number), which microscope they are using, and several other key data collection parameters. Once set, a workflow file is created and then saved to disk.
+The file creation triggers the message system \emph{ActiveMQ} and a ``file creation'' message is created. The second action performed by the custom made script is to start a \scipion instance in the microscope control computer.
+The instance runs in headless mode. \scipion headless mode has been developed specifically for eBIC and allows \scipion to be executed without user interface in large clusters with no graphical board. 
 
+%(a) script: (1) create workflow, (2) launchs headless scipion
+%(b) scipion starts webservice [knows nothing about the queue]
+%(c) second script (name please) (running all the time?) ask activeMQ for messages
+%    speaks with import movies [decuple Scipion from ActiveMQ], more generic solution
 
-Following this Diamond makes use of a central ActiveMQ [** what is this? a queue system] service which is triggered upon the template file being available in the visit directory, and runs a headless (i.e. without UI) version of Scipion which takes the template and executes in streaming mode.  THIS SHOULD PROBABLY INCLUDE SOMETHING ABOUT THE DETECTION OF NEW FILES BY SOCKET MESSAGE, BUT I DON’T KNOW HOW THIS WORKS. Me neither, I thought it polled the filesystem?
+After \scipion is launched the \protocol{import movie} protocol starts. \protocol{Import movie} needs to look for a list of files on the file system with names matching a pattern but, in Diamond distributed file system, this is a very expensive task. Therefore, \protocol{import movie} has been modified so it opens a webservice that waits until an auxiliary script connects to \emph{ActiveMQ}, retrieves all the  messages reporting creation of new files than satisfy the search pattern and reports the actual filenames. It would have been possible to suppress the auxiliary script and make \protocol{import movie} access directly to \emph{ActiveMQ} but we decided against this solution because we did not want to incorporate in \scipion code valid for a single facility. In this way, all code that is related with Diamond's IT infrastructure is encapsulated in the auxiliary script. 
 
+To monitor the progress of the automatic image processing CNB and \scilifelab cryo-EM services make use of \scipion default monitor system. In Diamond, the electronic notebook ISPyB is the standard tool to record and show metadata about the different experiments. In this way, a new monitor has been developed which, through a webservice, allows \scipion to directly interface with ISPyB.  This setup provides the users with a web interface showing general metadata about their experiment as well as  real-time updates on steps of the process and relevant output such as motion corrected images, drift values, CTF images, etc.
 
-To monitor the progress of the automatic processes, the Scipion pipeline at Diamond also includes custom nodes which allow it to interface with ISPyB.  This provides the users with a web interface showing general metadata about their experiment as well as new real-time updates on steps of the process and relevant output such as motion corrected images, drift values and CTF images (Figure XXX)
-
-\subsubsection{Additional Software Developments: }
-
-\subsection{Additional Sotware Developement: ISyB monitor}
-
-0) headless <-- no GUI
-1) Problem: access file system: very spensive using glob
-2) Modify import movies so it can start  sever that waits until "something" tells it that there is a new file. [quien reporta activeQ como]
-3) import though webservice << rama de diamond. pull request
-[** quien crea el sistema de directorios, create project]
-4) Wizard that creates normalized enviroment? Scipion workflow customiser. -> template scipion
-5) IspyB monitor -> connect to IspyB.(thumbnail-mic and ctf, defocus, resolution)
-[headless version]
-urls: where is this in scipion (given that there is no SNRF and Diamond)
-
-where is scipion monitor customizer
-
-
->>> que desencadena el proceso?
+Although most of developments described in this subsection will be integrated in the main \scipion code repository at present they are available in a developer's branch  at \url{https://github.com/I2PC/scipion/tree/release-1.1-headless-devel}.
