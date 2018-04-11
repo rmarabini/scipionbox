@@ -2,7 +2,7 @@
 The National Center for Biotechnology (CNB) forms part of the Spanish National Research Council (CSIC), the largest public research institution in Spain. 
 The CNB Cryo-Electron Microscopy Facility is a joint effort of the Centro Nacional de Biotecnolog\'{i}a (CNB-CSIC) and the Centro de Investigaciones Biol\'{o}gicas (CIB-CSIC). The mission of the facility is to provide researchers access to the latest cryo-EM technology for high resolution imaging. 
 
-This section in divided in two parts. In the first one we discuss the network setup that allow us to move the data from the microscope to the user laboratory. Then  we comment on an additional software (called  \emadmin) that connects \scipion with the microscope acquisition software (\epu) and records the facility activity.
+This section in divided in two parts. In the first one we discuss the network setup that allows us to move the data from the microscope to the user laboratory. Then  we comment on an additional software (called  \emadmin) that connects \scipion with the microscope acquisition software (\epu) and records the facility activity.
 
 \subsubsection{Network Setup and IT Infrastructure}
 
@@ -20,10 +20,10 @@ USB 3.0 drives can theoretically handle data flows of 300 MB/s, but CNB experien
 
 \subsubsection{Additional Software Developments: \emadmin}
 
-\emadmin was born as a script that created a normalized tree of directories  in which to store the movies acquired by the microscope, helped users to choose between a few predetermined image processing workflows and finally launched \scipion. At present it was grown in a client-server application that in addition to the old script capacities it has incorporate the following functions:
+\emadmin was born as a script that created a normalized tree of directories  in which to store the movies acquired by the microscope, helped users to choose between a few predetermined image processing workflows and finally launched \scipion. At present it has grown in a client-server application that in addition to the old script capacities it has incorporate the following functions:
 
 \begin{enumerate}
- \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this files as use them to create new predetermined workflows.
+ \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this files and use them to create new predetermined workflows.
  \item Automatic creation of pdf user's report containing: microscope acquisition parameters and histograms summarizing data resolution and  defocus. 
  \item The above mentioned information is stored in a database for further analysis. By default the system plots the  average resolution and astigmatism of the different acquisitions versus time
  \item Remote management. \emadmin is a client server application, the client maybe executed in a machine different from the one that executes \scipion
