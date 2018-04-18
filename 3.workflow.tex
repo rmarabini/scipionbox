@@ -1,4 +1,4 @@
-\section{\scipion Setup at the Different Facilities}
+\section{\scipion Setup at Different Facilities}
 
 The data flow created by an electron microscope requires a careful design of the IT infrastructures.  Different facilities have adopted different solutions and therefore, how \scipion  access data and interchange information may require minor adjustments. In this section we discuss  the different solutions applied in the different facilities in which \scipion is running.
 
@@ -11,13 +11,13 @@ So far, \scipion is being used routinely in seven Cryo-EM facilities:
  \item \emph{ESRF Cryo-Electron Microscope} (\url{http://www.esrf.eu/home/UsersAndScience/Experiments/MX/About_our_beamlines/CM01.html})
  \item \emph{eBIC at Diamond Light Source} ( \url{http://www.diamond.ac.uk/Science/Integrated-facilities/eBIC.html})
  \item \emph{CNB CryoEM Service} (\url{http://www.cnb.csic.es/index.php/en/research/core-facilities/microscopia-crioelectronica})
- \item \emph{Molecular Microscopy Consortium - NIH} (\url{https://www.niehs.nih.gov/research/atniehs/facilities/mmc/index.cfm})[**Pablo can you confirm this?]
- \item \emph{National Cancer Institute - NIH} (\url{https://cmm.nci.nih.gov/})[**Pablo can you confirm this?]
+ \item \emph{Molecular Microscopy Consortium - NIH} (\url{https://www.niehs.nih.gov/research/atniehs/facilities/mmc/index.cfm})
+ \item \emph{National Cancer Institute - NIH} (\url{https://www.cancer.gov/research/resources/cryoem})
  
 \end{itemize}
 and it is being considered in many more.
 
-\scipion original design satisfied the requirements of the CNB, in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm) where a rigorous booking system is followed. There, \scipion was adapted to interface with this booking platform in order to produce better reports. Lately,  \scipion has been installed in  large synchrotrons  such as ESRF and Diamond  where projects are handled by ISPyB (a customized laboratory information management system -LIMS- \citep{Delageniere2011}) and data are saved on a distributed file system. % that heavily penalizes access to lists of files. 
+\scipion original design satisfied the requirements of the CNB, in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm) where a rigorous booking system is followed. There, \scipion was adapted to interface with this booking platform in order to produce better reports. Lately,  \scipion has been installed in  large synchrotrons  such as ESRF and Diamond  where projects are handled by ISPyB (a customized laboratory information management system -LIMS- \citep{Delageniere2011:ispb}) and data are saved on a distributed file system. % that heavily penalizes access to lists of files. 
 In this environment, \scipion needs to constantly interchange information with ISPyB and with other applications through a message queue system called \emph{ActiveQ}.% and it cannot longer check if there is a new file in a particular storage device but must wait to be informed by the system that a new file has been created. 
 
 In the following, through three use cases, we describe in detail how \scipion has been adapted to the different environments.
