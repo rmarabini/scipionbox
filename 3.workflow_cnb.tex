@@ -6,18 +6,18 @@ This section in divided in two parts. In the first one we discuss the network se
 
 \subsubsection{Network Setup and IT Infrastructure}
 
-At the beginning CNB networking setup was a quite straightforward one, movies where stored in the  same machine that ran \scipion and processed data were saved to external USB hard disks by this same machine. The situation changed when the new Falcon-III detector was installed. After that, data were produced at sustained speeds as high as 90 MB/sec (when acquiring four movies by hole in linear mode) and the main problem became to move smoothly the data through the entire pipeline from the microscope to the final user laboratory. In the following we describe such a pipeline.
+At the beginning CNB networking setup was a quite straightforward one, movies were stored in the  same machine that ran \scipion and processed data were saved to external USB hard disks by this same machine. The situation changed when the new Falcon-III detector was installed. After that, data were produced at sustained speeds as high as 90 MB/sec (when acquiring four movies by hole in linear mode) and the main problem became to move smoothly the data through the entire pipeline from the microscope to the final user laboratory. In the following we describe such a pipeline.
 
 From a network point of view there are three different levels of accessibility: (1) a private network that cannot be accessed by regular users, (2) the CNB LAN (local area network)  that can be accessed by any user which works inside the hosting  institution and (3) finally, there is a single computer that may be accessed from outside the institution and therefore, it can see the WAN (wide area network).
 
 Data sets are recorded using \epu. The microscope control system has a 70 TB NAS (Network-attached storage) unit for saving movies as they are obtained (we will refer to this NAS as microscope-NAS). This storage unit is shared through a Samba share and connected to the private network using a 10Gb connexion. \scipion is executed on a Linux server which has two 1Gb NICs (network interface controllers) that connect it to the private and the LAN networks respectively (we will refer to this machine as \scipionbox). \scipionbox has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 2 \textit{Quadro M4000} GPUs. Finally, a second NAS with four 1Gb NICs is linked to the private, LAN and WAN networks (we will refer to this second NAS as output-NAS).
 
-The data flow is a follows: (a) the microscope system stores movies in the microscope-NAS, (b) when executing alignment-movie protocols \scipionbox reads the movies from the microscope-NAS but does not store them locally, (c) each hour, output-NAS connects to \scipionbox and copy -or update- the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup \scipion project and the movies to a USB disk or serve this information through the Internet and, (e) in parallel, \scipionbox transfers to  output-NAS different HTML reports that may be checked by users or staff with a HTML browser (see \url{http://nolan.cnb.csic.es/scipionbox/lastHTMLReport/}).
+The data flow is as follows: (a) the microscope system stores movies in the microscope-NAS, (b) when executing alignment-movie protocols \scipionbox reads the movies from the microscope-NAS but does not store them locally, (c) each hour, output-NAS connects to \scipionbox and copy -or update- the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup \scipion project and the movies to a USB disk or serve this information through the Internet and, (e) in parallel, \scipionbox transfers to  output-NAS different HTML reports that may be checked by users or staff with a HTML browser (see \url{http://nolan.cnb.csic.es/scipionbox/lastHTMLReport/}).
 
 Although CNB staff try to discourage the use of external USB hard disks versus network as way of retrieving the raw and processed data, this is the preferred option for most users.
 USB 3.0 drives can theoretically handle data flows of 300 MB/s, but CNB experience is that, in this busy environment, many of them  have trouble exceeding 50 MB/s. In most cases, 50 MB/s is enough to transfer the data before the following microscope  turn-shift starts. When two, or even three, users try to download their
 data simultaneously, output-NAS works as front-end and isolates the data
-acquiring and processing infrastructure from the user’s downloading activities.
+acquiring and processing infrastructure from the user's downloading activities.
 Network users access to output-NAS using a hardened common account. This account only allows rsync connections and make impossible to retrieve data if the name of the project to be downloaded is unknown. Weak ciphers (as arcfour) has been activated in outputNAS to speed up transfer.
 
 \subsubsection{Additional Software Developments: \emadmin}
@@ -26,8 +26,8 @@ Network users access to output-NAS using a hardened common account. This account
 where movies acquired by the microscope could be stored, helped users to choose between a few predetermined image processing workflows and finally launched \scipion. At present it has grown in a client-server application that, in addition to the old script capabilities, has incorporated the following functions:
 
 \begin{enumerate}
- \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this files and use them to create new predetermined workflows.
- \item  Automatic creation of pdf user’s report that contains microscope acquisition parameters and histograms summarizing data resolution and defocus. 
+ \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this file and use them to create new predetermined workflows.
+ \item  Automatic creation of pdf user's report that contains microscope acquisition parameters and histograms summarizing data resolution and defocus. 
  \item The above mentioned information is stored in a database for further analysis. By default, the system plots the  average resolution and astigmatism of the different acquisitions versus time.
  \item Remote management. \emadmin is a client server application, the client maybe executed in a machine different from the one that executes \scipion.
  \item Automatic backup of the \scipion project.

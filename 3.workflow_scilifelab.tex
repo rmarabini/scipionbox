@@ -20,13 +20,10 @@ A storage and pre-processing server (the staging
 server) constitutes the core of the SciLifeLab computational infrastructure.
  This machine has roughly 200 TB of storage (4 ZFS RAIDZ2 pools with 11 HDDs each), 2 NVIDIA GeForce GTX 1070 GPUs, 2 Intel Xeon E5-2630v4 CPUs (10 cores, 2.2 GHz, HT), 384 GB RAM, and a dual-port 10 GbE network card. The storage pool is exported via NFS and Samba. The microscope computers can thus write data directly there and other machines can access it.
  
- 
- 
- 
- The storage pool is exported via NFS and Samba, so the microscope computers can write data there directly and other machines can access it.
+% The storage pool is exported via NFS and Samba, so the microscope computers can write data there directly and other machines can access it.
 %Unfortunately, the K2 [** Jose Miguel, what is K2?, do you have 2 cameras? in the same microscope or in different ones, this is confusing, comment when ] computer writes data to a local SSD RAID while the Falcon-III does it to a dedicated storage server. %, in order to avoid interruption of data collection due to network issues. 
 
-To avoid interruption of data collection due to network issues each microscope has its own dedicated storage, that in the case of the Titan microscope is double since it may be connected to two different cameras, a K2 and a Falcon III. Hence an script to continuously move the produced data from the adequate storage to the staging server has been created. 
+To avoid interruption of data collection due to network issues each microscope has its own dedicated storage, that in the case of the Titan microscope is double since it may be connected to two different cameras, a K2 and a Falcon III. Hence a script to continuously move the produced data from the adequate storage to the staging server has been created. 
 
 %In this way, after starting the data collection, users launch a script that continuously moves the produced data from the adequate storage to the staging server.
 
