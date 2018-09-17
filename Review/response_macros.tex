@@ -1,0 +1,9 @@
+% response_macros.tex
+\newcommand{\initresponses}{\newcounter{pointcounter}}
+
+\newenvironment{reviewer}{\setcounter{pointcounter}{1}}{}
+
+\newcommand{\point}[1]{\medskip \noindent
+               \textsl{{\fontseries{b}\selectfont Q\thepointcounter}.
+                 \stepcounter{pointcounter} #1}}
+\newcommand{\reply}{\medskip \noindent \textbf{Answer}.\ }

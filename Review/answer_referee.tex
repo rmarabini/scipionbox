@@ -1,0 +1,118 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fontenc}
+\usepackage{graphicx}
+\usepackage{scrextend}
+\usepackage{tikz}
+\usepackage{pgfplotstable}%color table
+
+\def\groel{GroEL \emph{in silico}}
+
+\newcommand{\ffigure}[1]{Figure \ref{#1}}
+\newcommand{\ttable}[1]{Table \ref{#1}}
+\newcommand{\ffigures}{Figures}
+\newcommand{\ttables}{Tables}
+
+\date{06/09/18}
+\input{response_macros}
+\initresponses
+
+
+\begin{document}
+
+
+\begin{reviewer}
+\section*{Reviewer 1}
+\point{The graphical abstract is likely too detailed 
+and would not show well when reduced to the image size that the final version has.}
+
+\reply  Both reviewers complain that the graphical abstract need to be redesigned. The first reviewer complains that is ``...too detailed...'' while the second one claims that ``...is oversimplified...''. Since the graphical abstract is not compulsory  and both reviewers dislike it for completely opposite and irreconcilable reasons we have decided to drop it.
+
+
+\point{The manuscript would benefit from a figure that outlines the layout of a typical Scipion system, showing computers, data connections, data flows in workflow scenarios, and how streaming is now implemented. At least for one of the three examples described, a figure would be helpful and make the manuscript more appealing to readers. }
+
+\reply tut-tuc-tuc 
+
+\point{The English language at a few locations would benefit from further proof reading, but these are minor problems. }
+
+\reply tut-tuc-tuc 
+
+% The English language at a few locations would benefit from further proof reading, but these are minor problems. 
+% 
+% E.g.:
+% There are two different abstracts provided. One in the PDF for reviewing, and a second, shorter Abstract at the beginning of the manuscript text. 
+% For the first Abstract: "… how the execution of the algorithms is going on" would be better phrased "… how the execution of the algorithms is progressing".
+% For the second Abstract: "and it is being considered in many more." is a claim, not a provable fact. It should not be stated here. Even though, this statement might be true, the same would apply to all other software systems, which are likely being considered somewhere. 
+% 
+% Page 4: "Stream processing, i.e. computing" should be "Stream processing, i.e., computing" (comma missing). 
+% 
+% Page 6: "we described the pipeline offered…" should be "we describe the pipeline offered…"
+% 
+% Page 9: "by any user which…" should be "by any user, who…"
+% Same page: Explain what EPU is.
+% 
+% Page 10: "Weak ciphers (as arcfour) has been activated…" Should this be "Weak ciphers have been activated…"?   Please explain, what ciphers are.
+% 
+% Page 11 and in a few locations thereafter: "You are welcomed to download…" is awkwardly phrased. It should be "You are welcome to download…", but even then, it should be better stated as "The software can be freely downloaded and customized to meet the specific requirements of client organizations."
+% 
+% Page 13:  "Thermofisher Titan Krios" should probably be "Thermo Fischer Scientific Titan Krios" or "Thermo Scientific Titan Krios". 
+% 
+% Page 16: The sentence "They can potentially play with the pipeline in ways that are not possible when having a programmer writing the code for them." Is not understandable on first reading. Do you mean "This allows users to adjust the pipeline, which would not be possible with hard-coded workflows."
+% 
+% Page 17: "her home institution" should be "his/her home institution".
+
+\point{Minor corrections in pages: Abstract, 4, 6, 9, 10, 11, 13, 16, 17}
+
+\reply All grammar, spelling typos and other minor corrections suggested by the reviewer have been corrected
+
+
+\end{reviewer}
+
+\begin{reviewer}
+\section*{Reviewer 2}
+
+\point{The authors claim that the strength of their software is in its ability to process data while being collected; a point that is not well-addresses by other software. At the same time, they acknowledge that UCSFImage4, Focus, and Relion are software packages similar to Scipion capable of processing data in a high-throughput manner while new data is being acquired at the microscope. A clear differentiation between Scipion and these software packages was lacking in this manuscript. What advantages Scipion provide over the abovementioned software packages?}
+
+\reply At the software architectural level, perhaps the greatest differ-
+ence is that since Scipion was developed later, special attention
+was paid to defining abstraction layers to simplify maintenance
+and extensibility. For example, to create a new protocol in Scipion,
+only a Python script needs to be developed. From this script, the
+system will discover the new protocol and will automatically build
+a form and store the protocol-related information in the database.
+In Appion, however, the developer must develop the script, the cor-
+responding form, and an extra table in the database; Appion devel-
+opers might thus need to know the underlying framework in more
+detail.
+
+It is difficult to predict how EM software will evolve in the
+future. Our view is that software developers will continue to add
+algorithms to the different EM packages, but that the burden of
+many operations will be shifted from packages to frameworks.
+Bookkeeping will require special attention to provide real tracking
+and reproducibility. Workflows will have a key role when explor-
+ing processing alternatives. Most algorithms will need to use dis-
+tributed computing through clusters or the Cloud. Scipion is our
+first step in implementing an integrative framework to address
+important problems in the field simply and effectively
+
+\point{The authors mentioned that Scipion has been installed and in production mode in seven facilities. Is there a way to know how Scipion is being used and to get statistical data on its usage?}
+
+\reply tut-tuc-tuc 
+
+
+\point{Section 4 on Scipion setup at different facilities was confusing and unnecessarily lengthy. It wasn't clear to me if the "Additional software developments" made in 4.1.2 and 4.2.2 were general to Scipion or only made as a case-by-case scenario?}
+
+\reply tut-tuc-tuc 
+
+
+\point{The graphical abstract is oversimplified and does not convey any of the useful information presented in the manuscript. The background is distracting, the cartoons are redundant with the labels, and the image describing the reporting feature is not legible and improperly sized (laterally stretched).}
+
+\reply tut-tuc-tuc 
+
+\point{Finally, the manuscript could benefit greatly from more visual summaries and schematics to guide the readers especially the non-experts that the authors refer to as part of their target consumer base.}
+
+\reply tut-tuc-tuc 
+
+\end{reviewer}
+\end{document}

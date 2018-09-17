@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12, authoryear, preprint]{elsarticle}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -90,58 +90,58 @@
 
 \begin{document}
 \title{Using Scipion for Stream Image Processing at Cryo-EM Facilities}
+\begin{frontmatter}
 
-\author{
-J. G\'{o}mez-Blanco$^{(a, g)}$,
-J.M. de la Rosa-Trev\'{i}n$^{(c, g)}$,
-R. Marabini$^{(b, g)}$,\\
-L. del Cano$^{(a)}$,
-A. Jim\'{e}nez$^{(a)}$,
-M. Mart\'{i}nez$^{(a)}$,\\
-R. Melero$^{(a)}$,
-T. Majtner$^{(a)}$,
-D. Maluenda$^{(a)}$,
-J. Mota$^{(a)}$,\\
-Y. Rancel$^{(a)}$,
-E Ram\'{i}rez-Aportela$^{(a)}$,
-J.L. Vilas$^{(a)}$,\\
-M. Carroni$^{(c)}$,
-S. Fleischmann $^{(c)}$,
-E. Lindahl$^{(c,d)}$\\
-A.W. Ashton$^{(e)}$,
-M. Basham$^{(e)}$,
-D.K. Clare$^{(e)}$,\\
-K. Savage$^{(e)}$,
-C.A. Siebert$^{(e)}$,\\
-G.G. Sharov$^{(f)}$,
-C.O.S. Sorzano$^{(a)}$,
-P. Conesa$^{(a)}$,
-J.M. Carazo$^{(a)}$,\\
-}
+\author[cnb]{J. G\'{o}mez-Blanco\tnoteref{first}}
+\author[su1]{J.M. de la Rosa-Trev\'{i}n\tnoteref{first}}
+\author[uam]{R.~Marabini\corref{corr}\tnoteref{first}}
+\ead{roberto.marabini@uam.es}
+\cortext[corr]{Corresponding author}
+\cortext[first]{These authors  contributed equally to this work.}
+\author[cnb]{L. del Cano}
+\author[cnb]{A. Jim\'{e}nez}
+\author[cnb]{M. Mart\'{i}nez}
+\author[cnb]{R. Melero}
+\author[cnb]{T. Majtner}
+\author[cnb]{D. Maluenda}
+\author[cnb]{J. Mota}
+\author[cnb]{Y. Rancel}
+\author[cnb]{E Ram\'{i}rez-Aportela}
+\author[cnb]{J.L. Vilas}
+\author[su1]{M. Carroni}
+\author[su1]{S. Fleischmann}
+\author[su1, su2]{E. Lindahl}
+\author[ebic]{A.W. Ashton}
+\author[ebic]{M. Basham}
+\author[ebic]{D.K. Clare}
+\author[ebic]{K. Savage}
+\author[ebic]{C.A. Siebert}
+\author[mrc]{G.G. Sharov}
+\author[cnb]{C.O.S. Sorzano}
+\author[cnb]{P. Conesa}
+\author[cnb]{J.M. Carazo}
+
 
 %xxxx$^{(1)}$, xxxxx$^{(1,3)}$}
 \maketitle
-
-\lyxaddress{{\small$^{(a)}$ Biocomputing Unit, National Center for Biotechnology (CSIC), C/ Darwin, 3, Campus Universidad Aut\'{o}noma, 28049 Cantoblanco, Madrid, Spain.}}
-\lyxaddress{{\small$^{(b)}$Escuela Polit\'{e}cnica Superior, Universidad Aut\'{o}noma de Madrid, 28049 Cantoblanco, Madrid, Spain.}}
-\lyxaddress{{\small$^{(c)}$ Department of Biochemistry and Biophysics, Science for Life Laboratory, Stockholm University, Stockholm, Sweden}} 
-\lyxaddress{{\small$^{(d)}$ Swedish e-Science Research Center, KTH Royal Institute of Technology, Stockholm, Sweden}}
-\lyxaddress{{\small$^{(e)}$ Diamond Light Source, Harwell Science and Innovation Campus, Didcot OX11 0DE, United Kingdom}}
-\lyxaddress{{\small$^{(f)}$ Medical Research Council Laboratory of Molecular Biology, Francis Crick Avenue, Cambridge CB2 OQH, UK}}
-\lyxaddress{{\small$^{(g)}$ These authors  contributed equally to this work.}}
+\address[cnb]{Biocomputing Unit, National Center for Biotechnology (CSIC), C/ Darwin, 3, Campus Universidad Aut\'{o}noma, 28049 Cantoblanco, Madrid, Spain.}
+\address[su1]{Department of Biochemistry and Biophysics, Science for Life Laboratory, Stockholm University, Stockholm, Sweden} 
+\address[uam]{Escuela Polit\'{e}cnica Superior, Universidad Aut\'{o}noma de Madrid, 28049 Cantoblanco, Madrid, Spain.}
+\address[su2]{Swedish e-Science Research Center, KTH Royal Institute of Technology, Stockholm, Sweden}
+\address[ebic]{Diamond Light Source, Harwell Science and Innovation Campus, Didcot OX11 0DE, United Kingdom}
+\address[mrc]{Medical Research Council Laboratory of Molecular Biology, Francis Crick Avenue, Cambridge CB2 OQH, UK}
 
 
 %This document provides a preliminary analysis of the data collected by the CTF Challenge (http://i2pc.cnb.csic.es/3dembenchmark/LoadHome.htm). Figures/tables/plots/etc are located at the document's end. 
 \setcounter{figure}{2}%I do not know why but figure counter starts with -1
-\textbf{Corresponding Author: Roberto Marabini, Phone = +34 91 5854510, email: roberto@cnb.csic.es\\} %Roberto Marabini, Ph= 34 91 5854510, email: roberto@cnb.csic.es\\
 %Escuela Polit\'{e}cnica Superior\\
 %Universidad Aut\'{o}noma de Madrid\\
 %28049 Cantoblanco\\
 %Madrid\\
 %Spain
 
-\newpage
 \input{0.abstract.tex}
+\end{frontmatter}
 \input{1.introduction.tex}
 \input{2.overall.tex}
 \input{3.workflow.tex}
@@ -150,7 +150,7 @@ J.M. Carazo$^{(a)}$,\\
 \input{6.acknowledgments.tex}
 \appendix
 
-\bibliographystyle{elsart-harv}
+\bibliographystyle{elsarticle-harv}
 \bibliography{large}
 
 \clearpage
