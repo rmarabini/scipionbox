@@ -3,14 +3,15 @@
 
 Diamond Light Source is the UK National Synchrotron User Facility.  As such, it provides access to large-scale experimental facilities to the UK and worldwide scientific communities to conduct experiments that are not possible in their home laboratories.  As a consequence of this national role, Diamond has significant experience at managing many visiting scientists and user experiments, and the associated data and post-processing.  %In the area of Macromolecular Crystallography, this has become a highly automated process which allows users to visualise electron density maps within minutes of the experiment being completed (REF. Aller P et al Methods Mol Biol 2015)
 %The recent ``Revolution Resolution'' (REF. Kulbrandt W, Science 2014) in cryoEM has transformed the impact and demand of cryoEM in Structural Biology. However, the instrumentation and running costs of the latest generation of EM necessary for high-end cryoEM is beyond scope of all but the best-funded home laboratories. Due to the huge demand for high-end microscope access, 
-Recently, the electron Bio-Imaging Centre (eBIC) has been set up at Diamond~\citep{diamond2017}. The centre houses four Thermofisher Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
+Recently, the electron Bio-Imaging Centre (eBIC) has been set up at Diamond~\citep{diamond2017}. The centre houses four Thermo Fischer Scientific Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
 
 \subsubsection{Network Setup and IT Infrastructure}
 
 Diamond has thousands of users every year, both academic and commercial, and it is vital that their data is kept secure and confidential. A user management system
 has been developed to allocate each user with a unique federal identity (ID),
 and to associate this ID with the experiments in which the user partakes in.
- Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. Users may access their data through SynchWeb which fronts ISPyB, a Laboratory Information Management System combining sample tracking and experiment reporting \citep{Delageniere2011:ispb, Fisher2015:synchweb}.
+ %Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. 
+ Users may access their data through SynchWeb which fronts ISPyB, a Laboratory Information Management System combining sample tracking and experiment reporting \citep{Delageniere2011:ispb, Fisher2015:synchweb}.
  
  
  
@@ -48,4 +49,4 @@ to record and show metadata about the different experiments. A new monitor has t
 %In this way, a new monitor has been developed which, through a ISPyB python API, allows \scipion to directly interface with ISPyB.  
 This setup provides the users with a web interface showing general metadata about their experiment, as well as  real-time updates on steps of the process and relevant output, such as motion corrected images, drift values, CTF images, etc.
 
-Although most of developments described in this subsection will be integrated in the main \scipion code repository, at present they are available in a developer's branch  at \url{https://github.com/I2PC/scipion/tree/release-1.1-headless-devel}.
+At present, most of developments described in this subsection are available in a developer's branch  at \url{https://github.com/I2PC/scipion/tree/release-1.1-headless-devel}. Some of them (e.g. the monitor protocol) will be integrated in the main \scipion repository while the more Diamond specific software will be published in an independent repository. [** Ask Pablo about headless]

@@ -1,8 +1,8 @@
 \section{\scipion Setup at Different Facilities}
 
-The data flow created by an electron microscope requires a careful design of the IT infrastructures.  Different facilities have adopted different solutions and therefore, how \scipion  access data and interchange information may require minor adjustments. In this section we discuss  the  solutions applied by the different facilities in which \scipion is running.
+The data flow created by an electron microscope requires a careful design of the IT infrastructures.  Different facilities have adopted different solutions and therefore, how \scipion  access data and interchange information may require minor adjustments. In this section we discuss  the  solutions applied by some facilities in which \scipion is running.
 
-\scipion is so far being used routinely in seven Cryo-EM facilities:
+So far \scipion is being used routinely in seven Cryo-EM facilities:
 \begin{itemize}
  \itemsep0em 
 
@@ -16,12 +16,15 @@ The data flow created by an electron microscope requires a careful design of the
  \item \emph{University of Virginia Health System University Hospital} (\url{https://med.virginia.edu/molecular-electron-microscopy-core/})
  
 \end{itemize}
-and it is being considered in many more.
+%and it is being considered in many more.
 
-\scipion original design satisfied CNB requirements, in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm), where a rigorous booking system is followed. There, \scipion was adapted to interface with this booking platform to produce better reports. Lately,  \scipion has been installed in  large synchrotrons  such as ESRF and Diamond,  where projects are handled by ISPyB (a customized laboratory information management system -LIMS- \citep{Delageniere2011:ispb}) and data are saved on a distributed file system. % that heavily penalizes access to lists of files. 
+\scipion original design satisfied CNB requirements, in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm), where a rigorous booking system is followed. There, middleware (software that acts as a bridge between applications) was developed to interface with this booking platform to produce better reports. Lately,  \scipion has been installed in  large synchrotrons  such as ESRF and Diamond,  where projects are handled by ISPyB (a customized laboratory information management system -LIMS- \citep{Delageniere2011:ispb}) and data are saved on a distributed file system. % that heavily penalizes access to lists of files. 
 In this environment, \scipion needs to constantly interchange information with ISPyB and with other applications through a message queue system called \emph{ActiveQ}.% and it cannot longer check if there is a new file in a particular storage device but must wait to be informed by the system that a new file has been created. 
 
-In the following, through three use cases, we describe in detail how \scipion has been adapted to the different environments.
+%In the following, through three use cases, we describe in detail how \scipion has been adapted to the different environments.
+
+In the following, through the three above mentioned use cases, we describe in detail how \scipion is been used in these different environments. %Notice that EM facilities are designed and implemented to support high-throughput data acquisition and require complex data-collection workflows.  These workflows need access to experimental parameters such as microscope settings, sample and user information, as well as channels for feeding processing results back to the control system.  
+For each use case we will describe first the facility setup and then in the subsection entitled ``Aditional Software Developments'' we will comment on specific  software developed for each facility that connects \scipion with the facility and microscope control software.
 
 %All these particularities, that will be described in detail in the following, could only be handled thanks to a careful design that prioritizes flexibility at several levels. 
 
