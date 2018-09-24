@@ -1,0 +1,739 @@
+% flatex input: [scipionbox.tex]
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage[T1]{fontenc}
+\usepackage[table]{xcolor} % Colors and tables
+\usepackage{color, colortbl} % Define new colors and use in tables
+\usepackage{setspace} % Set paragraph lines space
+%\usepackage{tabu} % Other table package
+\usepackage{url} % Other table package
+\usepackage{listings}
+\usepackage{rotating}
+\usepackage[strict]{changepage}
+\usepackage[caption=false]{subfig}
+\usepackage{fancyhdr}
+\usepackage{rotating}
+\usepackage{xr}
+\usepackage{xspace}
+\usepackage{listings}
+
+%\externaldocument[Supp-]{supplementary_material}
+
+%\usepackage{lineno}
+\usepackage[update,prepend]{epstopdf}
+%\linenumbers
+\definecolor{lightgreen}{rgb}{0.75,0.75,0.0}
+%\usepackage{caption}
+%\usepackage{endfloat}
+%\DeclareCaptionFormat{empty}{}
+%\captionsetup{format=empty}
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[R]{\footnotesize  \thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\def\scipionbox{\textit{ScipionBox}\xspace}
+\def\scipion{\textit{Scipion}\xspace}
+\def\emadmin{\textit{EMAdmin}\xspace}
+\def\epu{\textit{EPU}\xspace}
+\def\scilifelab{SciLifeLab\xspace}
+\newcommand{\protocol}[1]{\texttt{#1}}
+
+%%%%%%%%%%%%%%%%%\def\baselinestretch{2}
+%\def\PARstart#1#2{#1#2} % if draft, disable it
+\def\degree{\ensuremath{^\circ}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\newcommand{\lyxaddress}[1]{
+   \par {\raggedright #1
+   \vspace{1.4em}
+   \noindent\par}
+}
+ 
+\newcommand{\itemph}[1]{\item{\emph{#1}}}
+\newcommand{\itprog}[1]{\item{\texttt{#1}}:}
+\newcommand{\refig}[1]{Fig. \ref{#1}}
+\newcommand{\seefig}[1]{(see \refig{#1})}
+\definecolor{grey}{rgb}{0.9,0.9,0.9}
+\renewcommand{\arraystretch}{1.3}
+
+
+
+\lstset{ %
+  language=XML,                % the language of the code
+  basicstyle=\footnotesize{8pt},       % the size of the fonts that are used for the code
+  %numbers=left,                   % where to put the line-numbers
+  %numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
+  %stepnumber=2,                   % the step between two line-numbers. If it's 1, each line 
+                                  % will be numbered
+  %numbersep=5pt,                  % how far the line-numbers are from the code
+  backgroundcolor=\color{grey},      % choose the background color. You must add \usepackage{color}
+  %showspaces=false,               % show spaces adding particular underscores
+  %showstringspaces=false,         % underline spaces within strings
+  %showtabs=false,                 % show tabs within strings adding particular underscores
+  frame=single,                   % adds a frame around the code
+  %rulecolor=\color{black},        % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
+  %tabsize=2,                      % sets default tabsize to 2 spaces
+  %captionpos=b,                   % sets the caption-position to bottom
+  %breaklines=true,                % sets automatic line breaking
+  %breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+  %title=\lstname,                   % show the filename of files included with \lstinputlisting;
+                                  % also try caption instead of title
+  keywordstyle=\color{blue},          % keyword style
+  %commentstyle=\color{dkgreen},       % comment style
+  %stringstyle=\color{mauve},         % string literal style
+  %escapeinside={\%*}{*)},            % if you want to add a comment within your code
+  %morekeywords={*,...}               % if you want to add more keywords to the set
+}
+
+\begin{document}
+\title{Using Scipion for Stream Image Processing at Cryo-EM Facilities}
+
+\author{
+J. G\'{o}mez-Blanco$^{(a, g)}$,
+J.M. de la Rosa-Trev\'{i}n$^{(c, g)}$,
+R. Marabini$^{(b, g)}$,\\
+L. del Cano$^{(a)}$,
+A. Jim\'{e}nez$^{(a)}$,
+M. Mart\'{i}nez$^{(a)}$,\\
+R. Melero$^{(a)}$,
+T. Majtner$^{(a)}$,
+D. Maluenda$^{(a)}$,
+J. Mota$^{(a)}$,\\
+Y. Rancel$^{(a)}$,
+E Ram\'{i}rez-Aportela$^{(a)}$,
+J.L. Vilas$^{(a)}$,\\
+M. Carroni$^{(c)}$,
+S. Fleischmann $^{(c)}$,
+E. Lindahl$^{(c,d)}$\\
+A.W. Ashton$^{(e)}$,
+M. Basham$^{(e)}$,
+D.K. Clare$^{(e)}$,\\
+K. Savage$^{(e)}$,
+C.A. Siebert$^{(e)}$,\\
+G.G. Sharov$^{(f)}$,
+C.O.S. Sorzano$^{(a)}$,
+P. Conesa$^{(a)}$,
+J.M. Carazo$^{(a)}$,\\
+}
+
+%xxxx$^{(1)}$, xxxxx$^{(1,3)}$}
+\maketitle
+
+\lyxaddress{{\small$^{(a)}$ Biocomputing Unit, National Center for Biotechnology (CSIC), C/ Darwin, 3, Campus Universidad Aut\'{o}noma, 28049 Cantoblanco, Madrid, Spain.}}
+\lyxaddress{{\small$^{(b)}$Escuela Polit\'{e}cnica Superior, Universidad Aut\'{o}noma de Madrid, 28049 Cantoblanco, Madrid, Spain.}}
+\lyxaddress{{\small$^{(c)}$ Department of Biochemistry and Biophysics, Science for Life Laboratory, Stockholm University, Stockholm, Sweden}} 
+\lyxaddress{{\small$^{(d)}$ Swedish e-Science Research Center, KTH Royal Institute of Technology, Stockholm, Sweden}}
+\lyxaddress{{\small$^{(e)}$ Diamond Light Source, Harwell Science and Innovation Campus, Didcot OX11 0DE, United Kingdom}}
+\lyxaddress{{\small$^{(f)}$ Medical Research Council Laboratory of Molecular Biology, Francis Crick Avenue, Cambridge CB2 OQH, UK}}
+\lyxaddress{{\small$^{(g)}$ These authors  contributed equally to this work.}}
+
+
+%This document provides a preliminary analysis of the data collected by the CTF Challenge (http://i2pc.cnb.csic.es/3dembenchmark/LoadHome.htm). Figures/tables/plots/etc are located at the document's end. 
+\setcounter{figure}{2}%I do not know why but figure counter starts with -1
+\textbf{Corresponding Author: Roberto Marabini, Phone = +34 91 5854510, email: roberto@cnb.csic.es\\} %Roberto Marabini, Ph= 34 91 5854510, email: roberto@cnb.csic.es\\
+%Escuela Polit\'{e}cnica Superior\\
+%Universidad Aut\'{o}noma de Madrid\\
+%28049 Cantoblanco\\
+%Madrid\\
+%Spain
+
+\newpage
+% flatex input: [0.abstract.tex]
+\begin{abstract}
+  
+Three dimensional electron microscopy is becoming a very data-intensive field in which vast amounts of experimental images are acquired at high speed. To manage such large-scale projects, we had previously developed  a modular workflow system called \scipion \citep{delarosatrevin2016}. We present here a major extension of \scipion that allows stream processing of EM images while the data is being acquired. This approach helps to detect problems at early stages, saves computing time and provides users with a detailed evaluation of the data quality before the acquisition is finished. %Different EM facilities have 
+%implemented their stream processing solution using custom-made scripts, but this script based approach is not flexible and present a slow response time to new feature requests. The advantages of our proposed solution are: (1) flexibility: users can customize their workflows from a  large collection of preloaded algorithms; (2) repeatability and traceability: workflows are stored and can be re-executed later, either with the same data or with a different data set; (3) monitorization: there are utilities that constantly check how the execution of the algorithms is going on and inform about possible anomalies; (4) reports: we have developed several graphical interfaces that are updated periodically producing a summary (e.g, CTF defocus values, system load, etc). This summary may be generated in HTML format and  published through a public web-site to provide access for external users; (5) backup: both local and remote backup of the data and image processing is provided. 
+At present, \scipion has been installed and is in production mode in seven Cryo-EM facilities throughout the world, and it is being considered in many more.
+
+\textbf{Keywords:} electron microscopy, streaming, image processing, live processing, high throughput, Scipion
+
+\end{abstract}
+
+% flatex input end: [0.abstract.tex]
+
+%Spain
+% flatex input: [1.introduction.tex]
+
+\section{Introduction}
+
+3D electron microscopy (3DEM)  can provide rich information about structural characteristics of macromolecular complexes. The field is under a major transformation due to the arrival of better microscopes, new large area direct electron detectors and automation \citep{kuhlbrandt2014a, Kuhlbrandt2014b}. These improvements make possible that a single microscope generates high quality data sets on the order of terabytes per day \citep{Saibil2015} while working for several days without interruption. Major challenges faced in the field are: (1) an efficient management of these huge datasets and their corresponding image processing workflows; (2) the need for sharing data and metadata  in an increasingly distributed and collaborative environment and; (3) a raising interest from scientists outside the field who might lack the skills of a experienced microscopist. %This situation strongly demands the application of techniques that are highly automated to allow high throughput. 
+
+%We will focus in this article in the critical stage of the image data acquisition in 3DEM.  Our goal is  to further develop  (\scipion) such that it extends the functionality of the microscope data collecting programs. In this way, \scipion starts the processing of the movies as they are being acquired with the double aim of checking for possible data collection errors and execute a first user-tailored image processing workflow that provides users with an accurate measurement of the acquired data quality.
+
+%Accounting for major government investment in increasingly costly electron microscopes requires a large user  base. 
+
+For most cases, the future of projects that require high-end microscopes is through centralized microscopy facilities, in which automatically acquired data needs to be monitored by users and facility staff.  With this scenario in mind, we have redesigned \scipion which is a software framework for integrating several 3DEM software packages through a workflow-based approach \citep{delarosatrevin2016}. % in which the early detection of issues may save a data acquisition shift which otherwise needs to be repeated after a new application that may be granted many months later. 
+In this way, \scipion starts the processing of the movies as they are being acquired with the double aim of checking for possible data collection errors and executing a user-tailored image processing workflow that provides users with an accurate estimation of the acquired data quality.
+
+Many software packages have been developed to support automated data collection, such as SerialEM \citep{Mastronarde2005}, Leginon \citep{Suloway2009}, UCSF-Tomography \citep{Zheng2007}, Tom Toolbox \citep{Nickell2005}, EPU \citep{EPU}, Latitude in Digital Micrograph \citep{Latitude}, EMMenu \citep{emmenu}, etc. However, the next step,  which is to provide image processing while  data are being collected, is not so well addressed. In fact, in most places this is accomplished through home made scripts \citep[e.g.][]{Pichkur2018}. %(i.e. \citet{Pichkur2018}).
+Exceptions are UCSFImage4 \citep{Li2015}, Focus \citep{Biyani2017} and Relion \citep{fernandez2017:relion-pipeline}. As we will show in this article, \scipion differs from these solutions in a larger flexibility, both from the point of view of users and facility staff.
+
+The organization of this document is as follows. First, we present the modifications introduced in \scipion to adapt it to large centralized microscopy facilities. Then we present a typical workflow to demostrate \scipion capabilities. Finally,  we describe in detail how \scipion is being used in three representative facilities.
+
+
+% flatex input end: [1.introduction.tex]
+
+%Spain
+% flatex input: [2.overall.tex]
+\section{Main Modifications introduced in  \scipion: Streaming and Metaprotocols}
+\label{overall}
+
+In the following we describe the most important modifications made to \scipion to facilitate its deployment and execution in centralized facilities.
+
+\subsection{Stream Processing}
+
+Stream processing, i.e. computing on data directly as they are produced or received, is the main change introduced in \scipion. 
+In this way, a new level of parallelization has been reached since the  data generated by the microscope continuously flows through a chain of protocols. For example, as movies are imported to the system they are aligned and their CTF is estimated. In \scipion version 1.2, users may find  the first steps in the image processing workflow adapted to streaming, including movie alignment,  CTF estimation and particle picking and extraction. In the developers version, several 2D classification algorithms are being adapted for this new way of processing.
+
+%\scipion is a multilayered application, the first layer handles the interaction with the user (\emph{presentation layer}), the second saves and retrieves the data used by the application  (\emph{data layer}) and finally, the third layer (\emph{business layer}) process the data following the user instructions.  
+\scipion stream implementation make extensive use of threads. %A thread is the smallest unit of processing that can be scheduled by an operating system. 
+Using threads, a programmer can effectively create two or more tasks that run at the same time and share the protocol resources (e.g. memory). 
+%is based on periodic updates of the protocol input and output data during the image processing. 
+%Each protocol execution in \scipion is an independent process that can create processing threads. 
+Each protocol that works in streaming mode has one of its threads monitoring input and updating output  data while other threads take care of the data processing. This clear separation between data access and data processing marks an important difference between running a script or using \scipion, since it facilitates a form of computing in which several jobs are executed  concurrently, instead of sequentially. Moreover, \scipion workflow engine allows users to modify the workflow on the fly without modifying a single line of code.
+%In practice, the latter follows  a more general and extensible approach that allows users to modify the workflow on the fly without modifying a single code line. %Moreover, it also allows to quickly develop new workflows .
+
+%Since allow to a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially
+
+%** JMRT: The following line is a more specify explanation, while the previous paragraph was more general
+%The modification will not interfere with the already executed steps and may take advantage from all already computed data. By default \scipion will automatically stop after 24 hours with no microscope activity, but you may  continue the acquisition after a stop by pressing the continue button, there is no need to restart from the beginning. 
+
+%\scipionbox uses the infrastructure provided by the Scipion project [Ref if not given already] that takes care of the creation and execution of workflows. These workflows may be imported from a set of predefined ones or created by the final users even if they have no programing skills.
+
+%A typical \scipion workflow starts importing the microscope data, then the  beam-induced movement is corrected. For this task, \scipion allows you to choose between five different algorithms from three different labs (an exhaustive list containing the approximately 200 algorithms accessible through \scipion and ranked by usability is available at \url{http://calm-shelf-73264.herokuapp.com/report_protocols/protocolTable/}). This multiplicity of possibilities is available at each different processing step although, if found overwhelming, may be ignored by choosing one of the default prepackaged workflows.   
+
+\subsection{Metaprotocols}
+Since the \scipion original publication we have developed many \emph{metaprotocols}, that is, 
+protocols that either check the progress of other protocols or compare the results of equivalent protocols.
+
+The first type of metaprotocols are called \emph{monitors} and are used to produce live analysis plots, generate reports or raise alerts when some problems are detected. A monitor example is the \protocol{CTF-monitor}, that checks the computed defocus values for each micrograph as they are generated. \protocol{CTF-monitor} may raise an alert if the defocus values are above or below certain thresholds and continuously generate HTML files so that users and staff may easily follow the data acquisition and processing either in-house or remotely. An example of these reports may be seen at \url{http://scipion.cnb.csic.es/scipionbox/lastHTMLReport/}% [**ROB NOTE: select a nice one an complete URL, I need to ask to javi chichon]%At the project's end, a review of the processing history is produced. [** URL to report example?]
+%This feature was very important since we knew that difference facilities will have different needs and criteria to be fulfilled.
+
+The second set of metaprotocols are grouped under the name \emph{consensus}. For a given logical step (for example, particle picking) these protocols check 
+the consistency of the output datasets obtained from the same input data using different algorithms. Continuing with the particle picking example, \protocol{consensus picking} will compare, at a given instant, the particles selected for each one of the executed particle-picking algorithms and produce as output a particle set containing those particles selected by most of the algorithms.
+
+We would like to finish this section stressing that despite the modifications introduced to \scipion data and process model, the framework is backward compatible and keeps providing full data provenance. In other words, \scipion provides detailed information about the origin of the data  and the process to generate it.
+
+
+%for any object created by a  protocol, \scipion always annotate how this object has been generated by detailing: the steps, input data and parameters used in the computation. Data provenance guaranties reproducibility and traceability. %Since provenance is solved by Scipion and not Scipionbox we will not discuss here how it is been achieved. We just note that, before choosing which data has to be stored, it is necessary to define how these data have to be structured so that they can be later recovered and understood . %This abstract modeling of the data also simplifies the software interoperability offered by Scipion.
+
+
+%Standardization
+%User has access to all parameters used by algorithms (she may ignore them)
+%Project can be imported in scipion without further ado.
+%Gui vs programatico
+%Export options?
+
+\section{Image Processing Workflows}
+
+\scipion is a flexible framework that allows to create different workflows by choosing among many algorithms at each step. Although the best workflow for each case will depend on specific requirements of specimens, microscopes or facilities, we  described the pipeline offered by default at the \emph{National Center for Biotechnology} (CNB) cryoEM Facility as use case to clarify Scipion capabilities.
+
+The workflow starts two independent protocols in parallel. The first protocol estimates the camera gain at each pixel for a few  movies \citep{sorzano2018}. % In the CNB setup the microscope camera is calibrated and internally performs the gain correction before writing the movies so the estimated gain image should be almost constant and equal to 1. 
+The output of this protocol serves as verification of the validity of the experimental gain image for the whole data set. The second protocol performs direct detector movie alignment. Currently, \scipion offers  five  methods for movie alignment: motioncorr \citep{Li2015}, motioncor2 \citep{Zheng2016:motioncor2}, correlation (an unpublished CPU version that implements in Xmipp a global alignment method and solves it similarly to motioncorr but using robust statistics), unblur \citep{Grant2015:unblur} and optical flow \citep{Abrishami2015:optical-flow}. Then the CTFs of the resulting micrographs are calculated. Scipion provides three CTF estimation methods:
+CTFFIND4 (Rohou and Grigorieff, 2015), gCTF (Zhang, 2016) and Xmipp CTF estimation (Sorzano et al., 2007; Vargas et al., 2013). At this point the user may compute the CTFs using several algorithms and compare them with the protocol \protocol{CTF consensus} that reports up to which frequency two estimations of the same micrograph are equivalent. Further automatic filtering based on CTF is available through the protocol \protocol{CTF filtering} that selects micrographs based on the astigmatism, resolution and defocus. %Another criteria for CTF selection is iciness, that is,  the ratio of the intensity in the resolution band between 3.5 and 3.9 \AA, and between 6 and 30 \AA, which gives a good estimate of the ice crystal content of the vitreous specimen.
+
+Up to this point the image processing pipeline is quite solid and may be executed in streaming without user intervention. The next step is to select (pick) particles. We have recently adapted eight particle picking methods in \scipion  for streaming (see at \url{https://github.com/I2PC/scipion/wiki/Integrated-Protocols#particles} an exhaustive list). In this way,  particles may be selected as soon as any new micrograph is available. Some picking algorithms require a training step in which either user intervention or information from a previous selection is needed. The streaming functionality is separated from the picking logic, so if in the future a new algorithm is added, it will work in streaming without extra effort from the algorithm developer. For those users that execute several picking algorithms, the protocol \protocol{picking consensus} may be useful. \protocol{picking consensus}  calculates the agreement between different particle-picking algorithms and produces a list with the particles selected by most of them.
+
+Two new streaming protocols are under development and will join the described  pipeline in a near future. The first one will perform 2D classification and the second one will create an initial 3D map based on these classes. A first version of these protocols is available in the \scipion developers version.
+
+As commented in Section \ref{overall}, to monitor, chart and create alerts  we have developed a set of metaprotocols. By default, \protocol{system}, \protocol{CTF} and \protocol{report monitors} are executed. \protocol{System monitor} reports on  CPU and GPU usage, memory consumption, and disk I/O. \protocol{CTF monitor} plots the CTF defocus and astigmatism  and it will raise an alarm if these parameters are not within a given range. Finally, the \protocol{report} protocol pushes all the created plots and summaries to a web server. This information can be accessed by users who are not physically in the microscope room (a live example report is available at \url{http://nolan.cnb.csic.es/scipionbox/lastHTMLReport/}).
+
+The proposed pipeline is very flexible and can be easily modified by each user. At the CNB (and collaborating institutions) we collect protocol usage statistics within \scipion and sort the different algorithms by popularity.  This information is available at  \url{http://scipion.i2pc.es/report_protocols/protocolTable/} and may help users to select between the different algorithms.
+
+
+
+% flatex input end: [2.overall.tex]
+
+%Spain
+% flatex input: [3.workflow.tex]
+\section{\scipion Setup at Different Facilities}
+
+The data flow created by an electron microscope requires a careful design of the IT infrastructures.  Different facilities have adopted different solutions and therefore, how \scipion  access data and interchange information may require minor adjustments. In this section we discuss  the  solutions applied by the different facilities in which \scipion is running.
+
+\scipion is so far being used routinely in seven Cryo-EM facilities:
+\begin{itemize}
+ \itemsep0em 
+
+ %\item \emph{Ume\aa\ Core Facility for Electron Microscopy} (UCEM, \url{http://www.kbc.umu.se/english/ucem})[** Jose Miguel can you verify this?] 
+ \item \emph{The Swedish National Cryo-EM Facility}. The Facility has two nodes, at \scilifelab in Stockholm and at Ume\aa\ University (\url{http://www.scilifelab.se}, \url{http://www.kbc.umu.se/english/ucem/cryo-em/})
+ \item \emph{ESRF Cryo-Electron Microscope} (\url{http://www.esrf.eu/home/UsersAndScience/Experiments/MX/About_our_beamlines/CM01.html})
+ \item \emph{eBIC at Diamond Light Source} ( \url{http://www.diamond.ac.uk/Science/Integrated-facilities/eBIC.html})
+ \item \emph{CNB CryoEM Service} (\url{http://www.cnb.csic.es/index.php/en/research/core-facilities/microscopia-crioelectronica})
+ \item \emph{Molecular Microscopy Consortium - NIH} (\url{https://www.niehs.nih.gov/research/atniehs/facilities/mmc/index.cfm})
+ \item \emph{National Cancer Institute - NIH} (\url{https://www.cancer.gov/research/resources/cryoem})
+ \item \emph{University of Virginia Health System University Hospital} (\url{https://med.virginia.edu/molecular-electron-microscopy-core/})
+ 
+\end{itemize}
+and it is being considered in many more.
+
+\scipion original design satisfied CNB requirements, in which \scipion automatically fetches newly recorded movies from a network mounted disk. After this first installation, \scipion was deployed on SciLifeLab (a centralized facility located at Stockholm), where a rigorous booking system is followed. There, \scipion was adapted to interface with this booking platform to produce better reports. Lately,  \scipion has been installed in  large synchrotrons  such as ESRF and Diamond,  where projects are handled by ISPyB (a customized laboratory information management system -LIMS- \citep{Delageniere2011:ispb}) and data are saved on a distributed file system. % that heavily penalizes access to lists of files. 
+In this environment, \scipion needs to constantly interchange information with ISPyB and with other applications through a message queue system called \emph{ActiveQ}.% and it cannot longer check if there is a new file in a particular storage device but must wait to be informed by the system that a new file has been created. 
+
+In the following, through three use cases, we describe in detail how \scipion has been adapted to the different environments.
+
+%All these particularities, that will be described in detail in the following, could only be handled thanks to a careful design that prioritizes flexibility at several levels. 
+
+%\scipion is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow  over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipion has been installed.
+
+% flatex input: [3.workflow_cnb.tex]
+\subsection{Case 1: Scipion at CNB}
+The National Center for Biotechnology (CNB) forms part of the Spanish National Research Council (CSIC), the largest public research institution in Spain. 
+The CNB Cryo-Electron Microscopy Facility is a joint effort of the Nacional Center for Biotechnology (CNB-CSIC) and the Biological Research Centers (CIB-CSIC). The mission of the facility is to provide researchers access to the latest cryo-EM technology for high resolution imaging. 
+
+This section in divided in two parts. In the first one we discuss the network setup that allows us to move the data from the microscope to the user laboratory. Then  we comment on an additional software (called  \emadmin) that connects \scipion with the microscope acquisition software (\epu) and records the facility activity.
+
+\subsubsection{Network Setup and IT Infrastructure}
+
+At the beginning CNB networking setup was a quite straightforward one, movies were stored in the  same machine that ran \scipion and processed data were saved to external USB hard disks by this same machine. The situation changed when the new Falcon-III detector was installed. After that, data were produced at sustained speeds as high as 90 MB/sec (when acquiring four movies by hole in linear mode) and the main problem became to move smoothly the data through the entire pipeline from the microscope to the final user laboratory. In the following we describe such a pipeline.
+
+From a network point of view there are three different levels of accessibility: (1) a private network that cannot be accessed by regular users, (2) the CNB LAN (local area network)  that can be accessed by any user which works inside the hosting  institution and (3) finally, there is a single computer that may be accessed from outside the institution and therefore, it can see the WAN (wide area network).
+
+Data sets are recorded using \epu. The microscope control system has a 70 TB NAS (Network-attached storage) unit for saving movies as they are obtained (we will refer to this NAS as microscope-NAS). This storage unit is shared through a Samba share and connected to the private network using a 10Gb connexion. \scipion is executed on a Linux server which has two 1Gb NICs (network interface controllers) that connect it to the private and the LAN networks respectively (we will refer to this machine as \scipionbox). \scipionbox has 32 CPUs at 2.40GHz, 62 Gb of RAM memory and 2 \textit{Quadro M4000} GPUs. Finally, a second NAS with four 1Gb NICs is linked to the private LAN and WAN networks (we will refer to this second NAS as output-NAS).
+
+The data flow is as follows: (a) the microscope system stores movies in the microscope-NAS, (b) when executing alignment-movie protocols \scipionbox reads the movies from the microscope-NAS but does not store them locally, (c) each hour, output-NAS connects to \scipionbox and copies -or updates- the last \scipion project, (d) at the same time output-NAS may be either executing a script to incrementally backup \scipion project and the movies to a USB disk or serve this information through the Internet and, (e) in parallel, \scipionbox transfers to  output-NAS different HTML reports that may be checked by users or staff with a HTML browser (see \url{http://nolan.cnb.csic.es/scipionbox/lastHTMLReport/}).
+
+Although CNB staff try to discourage the use of external USB hard disks versus network as way of retrieving the raw and processed data, this is the preferred option for most users.
+USB 3.0 drives can theoretically handle data flows of 300 MB/s, but CNB experience is that, in this busy environment, many of them  have trouble exceeding 50 MB/s. In most cases, 50 MB/s is enough to transfer the data before the following microscope  turn-shift starts. When two, or even three, users try to download their
+data simultaneously, output-NAS works as front-end and isolates the data
+acquiring and processing infrastructure from the user's downloading activities.
+Network users access to output-NAS using a hardened common account. This account only allows rsync connections and make impossible to retrieve data if the name of the project to be downloaded is unknown. Weak ciphers (as arcfour) has been activated in outputNAS to speed up transfer.
+
+\subsubsection{Additional Software Developments: \emadmin}
+
+\emadmin was born as a script that created a normalized tree of directories  
+where movies acquired by the microscope could be stored, helped users to choose between a few predetermined image processing workflows and finally launched \scipion. At present it has grown in a client-server application that, in addition to the old script capabilities, has incorporated the following functions:
+
+\begin{enumerate}
+ \item Transparent addition of new workflows. \scipion is able to export any executed workflow as a json file. \emadmin can import this file and use it to create new predetermined workflows.
+ \item  Automatic creation of pdf user's report that contains microscope acquisition parameters and histograms summarizing data resolution and defocus. 
+ \item The above mentioned information is stored in a database for further analysis. By default, the system plots the  average resolution and astigmatism of the different acquisitions versus time.
+ \item Remote management. \emadmin is a client server application, the client maybe executed in a machine different from the one that executes \scipion.
+ \item Automatic backup of the \scipion project.
+ \item \scipion is able to create live HTML reports on the image acquisition process. \emadmin keeps track of all of them and facilitates the access to this information.
+\end{enumerate}
+
+\emadmin is free software available at github repository (\url{https://github.com/rmarabini/webservices/tree/master/EMadmin}). You are welcomed to download and customize it to meet your organization specific requirements.
+
+
+% flatex input end: [3.workflow_cnb.tex]
+
+%\scipion is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow  over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipion has been installed.
+% flatex input: [3.workflow_scilifelab.tex]
+
+\subsection{Case 2: Scipion at the Swedish National Cryo-EM Facility}
+
+The Swedish National Cryo-EM Facility offers access to state-of-the-art equipment and expertise in single particle cryo-EM and cryo electron tomography (cryo-ET). The Facility has two nodes: at \scilifelab in Stockholm and at Ume\aa\ University. \scilifelab in Stockholm offers single-particle service with a 
+Talos Arctica for sample optimisation and a Titan Krios for high-resolution data collection. The Ume\aa\ node is expected to become operational during 2018, and will offer cryo-ET with a Titan Krios and a Scios DualBeam SEM.
+
+The facilities can be accessed by Swedish researchers through 
+a peer-reviewed process. Applications can be submitted through an application portal (\url{https://cryoem.scilifelab.se/}). % and will be evaluated once every three months based on their scientific merit and technical feasibility by a national Project Evaluation Committee. %On the other side, some time of the facility is reserved for internal research groups at Stockholm University. 
+Internally, an online booking system called \emph{Booked Scheduler} centralizes the reservations of the microscopes and other instruments. 
+
+At the beginning of 2016, the Cryo-EM facility at \scilifelab became one of the early adopters of \scipion streaming processing. Although the microscope operators were using home-made scripts to perform motion correction (with motioncor2) and CTF estimation (with Gctf), they recognized the importance of a more general
+framework. In particular, they were interested in the possibility of modifying easily the processing workflow as well as provide users and staff with  graphical tools for data analysis and quick feedback regarding the data collection.
+Although initially the same setup script used at
+CNB was adopted, a new one was developed to fully satisfy the facility
+requirements. In the following sections we will briefly describe the computational infrastructure at the \scilifelab node and the implementation of a Session Wizard to automate the initial setup while fetching information from other sources external to \scipion. 
+%[** thalos falcon III, titan k2 and falcon III]
+
+\subsubsection{Network Setup and IT Infrastructure}
+A storage and pre-processing server (the staging
+server) constitutes the core of the SciLifeLab computational infrastructure.
+ This machine has roughly 200 TB of storage (4 ZFS RAIDZ2 pools with 11 HDDs each), 2 NVIDIA GeForce GTX 1070 GPUs, 2 Intel Xeon E5-2630v4 CPUs (10 cores, 2.2 GHz, HT), 384 GB RAM, and a dual-port 10 GbE network card. The storage pool is exported via NFS and Samba. The microscope computers can thus write data directly there and other machines can access it.
+ 
+% The storage pool is exported via NFS and Samba, so the microscope computers can write data there directly and other machines can access it.
+%Unfortunately, the K2 [** Jose Miguel, what is K2?, do you have 2 cameras? in the same microscope or in different ones, this is confusing, comment when ] computer writes data to a local SSD RAID while the Falcon-III does it to a dedicated storage server. %, in order to avoid interruption of data collection due to network issues. 
+
+To avoid interruption of data collection due to network issues each microscope has its own dedicated storage, that in the case of the Titan microscope is double since it may be connected to two different cameras, a K2 and a Falcon III. Hence a script to continuously move the produced data from the adequate storage to the staging server has been created. 
+
+%In this way, after starting the data collection, users launch a script that continuously moves the produced data from the adequate storage to the staging server.
+
+%ata on the staging server, in an organized folder structure, we
+%can run pre-processing directly on the server.] If data processing is started soon
+%after data collection the incoming data file should be in RAM-cache and  no
+%disk access in needed, which is important with performance in mind. 
+After processing, users may  copy their data to external USB drives from two workstations in the microscope room that have access to the storage pool via NFS.
+There is also a dedicated download server which has access to the NFS export. This download server is accessible from  the Internet and allows downloads via rsync (over SSH) or SFTP. 
+
+All these computers are connected to a 10 GbE network switch. The only machine accessible from the Internet is the data download server, which has a dual-port 10 GbE network adapter (one used for the internal network, one for the external network). %Both the K2 computer and the Falcon-III dedicated storage server had one unused 10GbE interface that could be used to connect them to our private network, without having to interfere with the default setup.
+
+\subsubsection{Additional Software Developments: \emph{Session Wizard}}
+In order to interface \scipion with the microscope infrastructure an upgraded version of the original script developed at CNB was used. Unfortunately, it was difficult to reuse the existing code due to a different folder structure and, more important, a different approach to user and microscope management. %To address the new set of requirements, a new wizard is under development at \scilifelab. For this new wizard, a basic data model was designed representing the current processing and data organization at \scilifelab. %The model is composed by the following entities:
+
+%[** quitar modelo de datos]
+%\begin{itemize}
+%\setlength\itemsep{0em}
+% \item \textit{User}: represents all persons that can book microscope time or are registered in the Application Portal 
+% related to national projects.
+% \item \textit{Reservation}:  is a resource (e.g, Krios, Talos, Vitrobot, etc) booking for a given period of time.
+% \item \textit{Order}:  is a given national project with an unique identifier in the Application Portal
+% \item \textit{Project}:  can be a either a national project (related to a given Order) or an internal project.
+% \item \textit{Session}:  stores information about the usage of the micrograph for a given day.
+%\end{itemize}
+
+When a user starts a data collection, the wizard is executed using the command \textit{session-titan} (or \textit{session-talos}). The wizard determines which user has booked the microscope by fetching today's booking information from \emph{Booked Scheduler} through their web API. From the reservation information the wizard will also detect if it is an internal or a national facility project. 
+In case of the latter, additional information will be retrieved from the Application Portal (such as principal investigator, project code, contact person or invoice address). After gathering all this information the wizard stores it, creates the processing environment and launches \scipion. %For example, the movies-import protocol will already point to the location where the files will be written for this session. Moreover, taking into account which microscope-camera is being  used, the files pattern can be inferred. 
+
+The current implementation of the wizard stores each session in a simple database file. This database, together with extra information from the Booking System and the Application Portal, is used to generate invoices and reports for a given period. %The generation of a session report is under development, that will provide a summary and useful information for users to access the acquired data. 
+%[** this last sentence is not very informative]
+
+The described session wizard can be found at  \url{https://github.com/delarosatrevin/scipion-session}. You are welcomed to download and customize it to meet your organization specific requirements. \emph{Booked Scheduler} is available at (\url{https://www.bookedscheduler.com/})
+
+%existing data model represents the specify usage at the \scilifelab facility and there are not immediate plans to make it more general and easy to reuse. Nonetheless, the model is quite simple and should to be difficult to modify it to fit other requirements. 
+
+
+
+% flatex input end: [3.workflow_scilifelab.tex]
+
+%\scipion is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow  over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipion has been installed.
+% flatex input: [3.workflow_diamond.tex]
+
+\subsection{Case 3: Scipion at eBIC (Diamond Light Source)}
+
+Diamond Light Source is the UK National Synchrotron User Facility.  As such, it provides access to large-scale experimental facilities to the UK and worldwide scientific communities to conduct experiments that are not possible in their home laboratories.  As a consequence of this national role, Diamond has significant experience at managing many visiting scientists and user experiments, and the associated data and post-processing.  %In the area of Macromolecular Crystallography, this has become a highly automated process which allows users to visualise electron density maps within minutes of the experiment being completed (REF. Aller P et al Methods Mol Biol 2015)
+%The recent ``Revolution Resolution'' (REF. Kulbrandt W, Science 2014) in cryoEM has transformed the impact and demand of cryoEM in Structural Biology. However, the instrumentation and running costs of the latest generation of EM necessary for high-end cryoEM is beyond scope of all but the best-funded home laboratories. Due to the huge demand for high-end microscope access, 
+Recently, the electron Bio-Imaging Centre (eBIC) has been set up at Diamond~\citep{diamond2017}. The centre houses four Thermofisher Titan Krios, a Talos Arctica and a Scios dual-beam. All of the transmission electron microscopes are equipped with counting-mode direct electron detectors and Volta phase plates. 
+
+\subsubsection{Network Setup and IT Infrastructure}
+
+Diamond has thousands of users every year, both academic and commercial, and it is vital that their data is kept secure and confidential. A user management system
+has been developed to allocate each user with a unique federal identity (ID),
+and to associate this ID with the experiments in which the user partakes in.
+ Visits are structured such that all raw and processed data collected during an experiment are kept in one directory, and only the associated visitors have read and write permissions in that directory. Users may access their data through SynchWeb which fronts ISPyB, a Laboratory Information Management System combining sample tracking and experiment reporting \citep{Delageniere2011:ispb, Fisher2015:synchweb}.
+ 
+ 
+ 
+ %Users may access their data through ISPyB \citep{Delageniere2011:ispb},  a Laboratory Information Management System (LIMS) combining sample tracking and experiment reporting. %The link between the user and their visits enables data management such as archiving data to a long-term tape storage system, or the Laboratory Information Management System ISPyB (REF. Delageniere et al Bioinformatics 2011). In contrast to the CNB setup, Diamond has integrated the microscopes in much the same fashion to that of the beamlines at the facility, as is shown in figure X
+
+Data is collected onto a local machine %in a similar way to the CNB setup, but 
+and then immediately moved via 10Gbps Ethernet to the associated visit directory in the centralized storage, a multi Petabyte GPFS high performance parallel file system.  Once the raw data is present on the GPFS system, high speed interconnects to the central cluster enable rapid data processing. %Services such as these are shared amongst the whole facility allowing for flexibility in their deployment and generally allowing better service.
+
+ The complexity of Diamond IT infrastructure requires to integrate many heterogeneous systems. In this environment a major problem is to achieve interaction and data exchange between diverse applications. One of the solutions to this problem has been to implement \emph{indirect communication} through a message queuing system called \emph{ActiveQ}. A message queue is a mechanism
+that allows a sender process and a receiver process to exchange information; instead of connecting directly, the sender posts messages in a queue and the receiver, when ready, takes these messages from the queue and process them appropriately. 
+
+%In this environment any piece of information or data that needs to be interchanged among  two applications will be placed in a queue by the sender application until the destination application explicitly asks for it.
+
+%Simply said; a message queuing system is a software where queues can be defined, applications may connect to the queue and post or retrieve  messages. A message can include any kind of information, for example, about a process/task that should start on another application (that could be on another server). %The message queuing software stores the messages until a receiving application connects and takes a message off the queue. The receiving application then processes the message in an appropriate manner.
+
+\subsection{Additional Software Developments: ISPyB monitor, Scipion Headless}
+
+From the image processing point of view, in Diamond, a typical cryoEM session starts by launching a custom made script that  allows users to specify values pertinent to their experiment, namely the session ID (or visit number), which microscope they are using, and several other key data collection parameters. Once set, a file describing a \scipion workflow is created and then saved to disk.
+A daemon that is running on the microscope control server notices the file creation and sends a ``file creation'' message to \emph{ActiveMQ}. 
+
+Another process listening to \emph{ActiveMQ} then launches \scipion from this workflow and creates a running ``headless'' project. \scipion headless mode has been developed specifically for eBIC and allows \scipion to be executed without graphical user interface in large clusters with no graphical board. 
+
+%(a) script: (1) create workflow, (2) launchs headless scipion
+%(b) scipion starts webservice [knows nothing about the queue]
+%(c) second script (name please) (running all the time?) ask activeMQ for messages
+%    speaks with import movies [decuple Scipion from ActiveMQ], more generic solution
+
+%After \scipion is launched the \protocol{import movie} protocol starts. \protocol{Import movie} needs to look for a list of files on the file system with names matching a pattern but, in Diamond distributed file system, this is a very expensive task. Therefore, \protocol{import movie} has been modified so it opens a webservice that waits until an auxiliary script connects to \emph{ActiveMQ}, retrieves all the  messages reporting creation of new files than satisfy the search pattern and reports the actual filenames. It would have been possible to suppress the auxiliary script and make \protocol{import movie} access directly to \emph{ActiveMQ} but we decided against this solution because we did not want to incorporate in \scipion code valid for a single facility. In this way, all code that is related with Diamond's IT infrastructure is encapsulated in the auxiliary script. 
+
+Unlike CNB and SciLifeLab cryo-EM services, where the
+Scipion default monitor system displays the progress of the automatic image
+processing, in Diamond, the electronic notebook ISPyB is the natural framework
+to record and show metadata about the different experiments. A new monitor has thus been developed to allow Scipion to directly interface with ISPyB using the ISPyB python API.
+%To monitor the progress of the automatic image processing, CNB and \scilifelab cryo-EM services make use of \scipion default monitor system. However, in Diamond, the electronic notebook ISPyB is the standard tool to record and show metadata about the different experiments. 
+%In this way, a new monitor has been developed which, through a ISPyB python API, allows \scipion to directly interface with ISPyB.  
+This setup provides the users with a web interface showing general metadata about their experiment, as well as  real-time updates on steps of the process and relevant output, such as motion corrected images, drift values, CTF images, etc.
+
+Although most of developments described in this subsection will be integrated in the main \scipion code repository, at present they are available in a developer's branch  at \url{https://github.com/I2PC/scipion/tree/release-1.1-headless-devel}.
+
+% flatex input end: [3.workflow_diamond.tex]
+
+%\scipion is a very flexible framework that allows to create many different workflows and to choose among several algorithms at each workflow-step. In this work we do not recommend a particular workflow  over others since we realize that different specimens, microscopes or facilities may have different requirements. Nevertheless, since different use cases may clarify \scipionbox capabilities, in the following we describe the pipeline offered by default to the users of three different facilities where \scipion has been installed.
+
+
+
+
+% flatex input end: [3.workflow.tex]
+
+%Spain
+% flatex input: [4.future.tex]
+\subsection{Future Developments}
+
+Currently, \scipion includes the appropriate code (python wrappers) to talk to the integrated EM packages (Xmipp, Eman, Relion, ...) at the time of the release. Therefore, an update of any of the integrated EM packages immediately after the \scipion release will not be available until next \scipion release (we are aiming for one major release per year). To decouple EM-package releases from \scipion releases, we are working on making the wrappers for EM packages  independent from \scipion. Plans for ensuring this independence include: (1) wrapper installation through pip (\url{https://pip.pypa.io/en/stable/}), (2) reimplementation of the wrappers as plug-ins that will be automatically detected and added to the application menu and (3) develop of standalone IO  and visualization libraries that make \scipion fully independent from other EM packages.
+
+Additionally, in collaboration with the Xmipp team, we are pushing the streaming workflow with the aim of obtaining a first initial volume. We are also adding structure modeling capabilities, by integrating some functionality from programs such as Coot \citep{emsley2010:coot}, Refmac \citep{Murshudov1997:refmac}, etc. 
+
+As part of the EOSCPilot project (\url{https://eoscpilot.eu/cryoem}), we are also improving  how \scipion exports workflows in order to ease reporting of the work done. The goal is to write a workflow file that fully describes the image processing steps, so that if the same input data is provided to the workflow the same results should be obtained. In this way we want to make  the data produced by \scipion more compliant with FAIR guidelines given by the \citet{eu2016:fair}. This workflow file could go with the raw data acquired by CryoEM facilities and deposited at common EM databases such as EMPIAR or EMDB \citep{Patwardhan2016:databasesEM}. To facilitate the visualization of the workflow file in any of these databases, we are  developing a  webcomponent (\scipion \emph{workflow viewer}) that will easily allow these repositories to visualize the workflow on their web pages (\url{https://github.com/I2PC/web-workflow-viewer}). Finally, we are implementing a workflow repository. This repository will contain ready-to-use workflows that support a range of use cases.
+
+% flatex input end: [4.future.tex]
+
+%Spain
+% flatex input: [5.conclusions.tex]
+%\section{Discussion}
+%[**TODO]: Discuss the obtained numbers in the result section
+%[**REmove this section?]
+
+\section{Conclusions}
+
+The new generation of high-end cryo electron microscopes and direct electron detectors are behind the recent increase in cryo-EM  popularity. However, the run and maintenance costs of these new microscopes are high and can only be justified by keeping the microscopes up and running 24 hours a day. Therefore, microscopes tend to belong to centralized facilities where users are allocated microscope time (shifts) to perform a variety of tasks. Available shifts are a scarce commodity and therefore users (and staff) need to be able to monitor the quality of the acquisition process and obtain, as soon as possible, a first glimpse of the reconstructed specimen in order to provide an early detection of any issue. 
+
+ Workflow systems have been explored and used extensively in bioinformatics but there is relatively little progress in that direction in the cryo-EM community. \scipion has been designed following a strict workflow paradigm. This approach is specially useful for tasks that need to go from a given start (movies) to a defined end (3D map), but where there are many different paths (algorithms) and steps to get there.
+ 
+ In a workflow approach, users (including microscope staff) can reasonably be expected to edit the paths. They can potentially play with the pipeline in ways that are not possible when having a programmer writing the code for them. Furthermore, not having the processing path hardcoded in the program means you do not have to recompile, so changes can be quickly tested   even at run time. The \scipion workflow approach provides provenance, that is,  for any created object (micrograph, CTFs, class, etc) \scipion stores metadata such as which programs, which parameters, and which exact path was followed to create any output data.  In this way,  real tracking and reproducibility are provided. 
+
+ \scipion stream capabilities can handle large and continuously produced volumes of data. The benefits of streaming are clear: (1) it helps to process data as soon as it is generated,  providing almost instant results on data quality; (2) it saves user processing time and resources at her home institutions since part of the processing is done while data is being acquired; and (3) 
+ it further reduces the overall experimental time by allowing processing the data while it is transferred to the final user laboratory. 
+ 
+ \scipion has been deployed in cloud and there is a public image, with all the required preinstalled cryoEM software,  available at Amazon WebServices EC2 and EGI federated clouds. This image makes use of \scipion streaming capabilities, that is, they are able to process data as soon as it has been transfered to an Amazon storage unit, and can be used to handle  production peaks.
+ 
+ 
+\scipion is provided 
+freely as open source software. Online documentation
+describing \scipion download and installation is available
+at \url{http://scipion.cnb.csic.es/m/download_form/} and \url{https://github.com/I2PC/scipion/wiki/How-to-Install}, respectively. Cloud installation instructions are available at \url{https://github.com/I2PC/scipion/wiki/Scipion-in-the-Cloud}. Other public software mentioned in this article as \emadmin, \emph{wizard session} and the different scripts used at eBIC are available at \url{https://github.com/rmarabini/webservices/tree/master/EMadmin}, \url{https://github.com/delarosatrevin/scipion-session} and \url{https://github.com/I2PC/scipion/tree/release-1.1-headless-devel} respectively.
+\scipion download statistics, usage map and protocol usage ranking are available at \url{http://scipion.i2pc.es/downloadstats}, \url{http://scipion.i2pc.es/report_protocols/scipionUsage/} and \url{http://scipion.i2pc.es/report_protocols/protocolTable/} respectively.
+
+ For more information about how to install Scipion or
+suggestions to improve it, contact us at scipion@cnb.csic.es.
+
+% to automatically process user data within a few minutes of data collection at a rate of a few terabytes per day.
+
+%In order to extract useful results from the image data, images must be processed using software which is complex, often lacking intuitive user interfaces and documentation
+
+
+
+
+
+% flatex input end: [5.conclusions.tex]
+
+%Spain
+% flatex input: [6.acknowledgments.tex]
+\section{Acknowledgments}
+
+The authors would like to acknowledge economical support from:
+
+The Spanish Ministry of Economy and Competitiveness through Grants BIO2016-76400-R(AEI/FEDER, UE) and AEI/FEDER BFU 2016 74868P, the Comunidad Aut\'{o}noma de Madrid through Grant: S2017/BMD-3817, European Union (EU) and Horizon 2020 through grant iNEXT (INFRADEV-1-2014-1, Proposal: 654248). The ``Knut \& Alice Wallenberg Foundation'', and ``A Pilot Facility development grant from Science for Life Laboratory''. European Union (EU) and Horizon 2020 through grant EOSCpilot (INFRADEV-04-2016, Proposal: 739563).
+
+This work used the EGI Infrastructure and is co-funded by the EGI-Engage project (Horizon 2020) under Grant number 654142. European Union (EU) and Horizon 2020 through grant West-Life (EINFRA-2015-1, Proposal: 675858) European Union (EU) and Horizon 2020 through grant Elixir - EXCELERATE (INFRADEV-3-2015, Proposal: 676559) European Union (EU) and Horizon 2020 through grant iNEXT (INFRAIA-1-2014-2015, Proposal: 653706). The authors acknowledge the support and the use of resources of Instruct, a Landmark ESFRI project. This work has used the Cryo-EM Swedish National Facility funded by the Knut and Alice Wallenberg, Family Erling Persson and Kempe Foundations, SciLifeLab, Stockholm University and Ume\aa\ University.
+
+We acknowledge Diamond for access and support of the Cryo-EM facilities at the UK national electron bio-imaging centre (eBIC), funded by the Wellcome Trust, MRC and BBSRC.
+
+
+%\section{Project stability and funding}
+
+
+%Scipion development is been done in the context of the Instruct Image Processing Cen-
+%ter (I2PC, http://i2pc.cnb.csic.es). Instruct is the European initiative for Strategic
+%Scientific Infrastructures (ESFRI) for Structural Biology. The I2PC started with the objective 
+%to provide efficient support for research projects in Europe demanding expertise in 
+%electron microscopy image processing. In order to support a large collection
+%of projects, the first activities of the I2PC were oriented to design and implement the
+%necessary software tools. 
+
+%At present the I2PC has this money and this people
+
+%ScipionBox is part of the Scipion package which is provided 
+%freely as open source software. Online documentation
+%describing Scipion download and installation is available
+%at \url{http://scipion.cnb.csic.es/m/download_form/} and \url{https://github.com/I2PC/scipion/wiki/How-to-Install}, respectively.
+
+%It was recognized the need for a platform that could provide
+%a friendly GUI on top of advanced image processing algorithms and, at the same time,
+%assure standardization, traceability and reproducibility.
+%\section{Things to mention if possible}
+%\begin{itemize}
+% \item Cloud
+%\end{itemize}
+
+% flatex input end: [6.acknowledgments.tex]
+
+%Spain
+\appendix
+
+%*flatex input: [scipionbox.bbl]
+\begin{thebibliography}{26}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+
+\bibitem[{Abrishami et~al.(2015)Abrishami, Vargas, Li, Cheng, Marabini,
+  Sorzano, and Carazo}]{Abrishami2015:optical-flow}
+Abrishami, V., Vargas, J., Li, X., Cheng, Y., Marabini, R., Sorzano, C.~O.,
+  Carazo, J.~M., Mar 2015. {{A}lignment of direct detection device micrographs
+  using a robust {O}ptical {F}low approach}. J. Struct. Biol. 189~(3),
+  163--176.
+
+\bibitem[{Biyani et~al.(2017)Biyani, Righetto, McLeod, Caujolle-Bert,
+  Castano-Diez, Goldie, and Stahlberg}]{Biyani2017}
+Biyani, N., Righetto, R.~D., McLeod, R., Caujolle-Bert, D., Castano-Diez, D.,
+  Goldie, K.~N., Stahlberg, H., May 2017. {{F}ocus: {T}he interface between
+  data collection and data processing in cryo-{E}{M}}. J. Struct. Biol.
+  198~(2), 124--133.
+
+\bibitem[{Clare et~al.(2017)Clare, Siebert, Hecksel, Hagen, Mordhorst, Grange,
+  Ashton, Walsh, Grunewald, Saibil, Stuart, and Zhang}]{diamond2017}
+Clare, D.~K., Siebert, C.~A., Hecksel, C., Hagen, C., Mordhorst, V., Grange,
+  M., Ashton, A.~W., Walsh, M.~A., Grunewald, K., Saibil, H.~R., Stuart, D.~I.,
+  Zhang, P., Jun 2017. {{E}lectron {B}io-{I}maging {C}entre (e{B}{I}{C}): the
+  {U}{K} national research facility for biological electron microscopy}. Acta
+  Crystallogr D Struct Biol 73~(Pt 6), 488--495.
+
+\bibitem[{de~la Rosa-Trev\'{i}n et~al.(2016)de~la Rosa-Trev\'{i}n, Quintana,
+  del Cano, Zald\'{i}var, Foche, Guti\'{e}rrez, G\'omez-Blanco,
+  Burguet-Castell, Cuenca-Alba, Abrishami, Vargas, Ot\'on, Sharov, Vilas,
+  Navas, Conesa, Kazemi, Marabini, Sorzano, and Carazo}]{delarosatrevin2016}
+de~la Rosa-Trev\'{i}n, J., Quintana, A., del Cano, L., Zald\'{i}var, A., Foche,
+  I., Guti\'{e}rrez, J., G\'omez-Blanco, J., Burguet-Castell, J., Cuenca-Alba,
+  J., Abrishami, V., Vargas, J., Ot\'on, J., Sharov, G., Vilas, J., Navas, J.,
+  Conesa, P., Kazemi, M., Marabini, R., Sorzano, C., Carazo, J., 2016. Scipion:
+  A software framework toward integration, reproducibility and validation in 3d
+  electron microscopy. Journal Structural Biology 195~(1), 93 -- 99.
+
+\bibitem[{Delageniere et~al.(2011)Delageniere, Brenchereau, Launer, Ashton,
+  Leal, Veyrier, Gabadinho, Gordon, Jones, Levik, McSweeney, Monaco, Nanao,
+  Spruce, Svensson, Walsh, and Leonard}]{Delageniere2011:ispb}
+Delageniere, S., Brenchereau, P., Launer, L., Ashton, A.~W., Leal, R., Veyrier,
+  S., Gabadinho, J., Gordon, E.~J., Jones, S.~D., Levik, K.~E., McSweeney,
+  S.~M., Monaco, S., Nanao, M., Spruce, D., Svensson, O., Walsh, M.~A.,
+  Leonard, G.~A., Nov 2011. {{I}{S}{P}y{B}: an information management system
+  for synchrotron macromolecular crystallography}. Bioinformatics 27~(22),
+  3186--3192.
+
+\bibitem[{Emsley et~al.(2010)Emsley, Lohkamp, Scott, and
+  Cowtan}]{emsley2010:coot}
+Emsley, P., Lohkamp, B., Scott, W.~G., Cowtan, K., 2010. Features and
+  development of coot. Acta Crystallographica Section D - Biological
+  Crystallography 66, 486--501.
+
+\bibitem[{{EUROPEAN COMMISSION Directorate-General for Research and
+  Innovation}(2016)}]{eu2016:fair}
+{EUROPEAN COMMISSION Directorate-General for Research and Innovation}, 2016.
+  Guidelines on {F}{A}{I}{R} {D}ata {M}anagement in {H}orizon 2020.
+\newline\urlprefix\url{http://ec.europa.eu/research/participants/data/ref/h2020/grants_manual/hi/oa_pilot/h2020-hi-oa-data-mgt_en.pdf}
+
+\bibitem[{Fernandez-Leiro and Scheres(2017)}]{fernandez2017:relion-pipeline}
+Fernandez-Leiro, R., Scheres, S. H.~W., Jun 2017. {{A} pipeline approach to
+  single-particle processing in {R}{E}{L}{I}{O}{N}}. Acta Crystallographica D
+  Struct Biol 73~(Pt 6), 496--502.
+
+\bibitem[{Fisher et~al.(2015)Fisher, Levik, Williams, Ashton, and
+  McAuley}]{Fisher2015:synchweb}
+Fisher, S.~J., Levik, K.~E., Williams, M.~A., Ashton, A.~W., McAuley, K.~E.,
+  Jun 2015. {{S}ynch{W}eb: a modern interface for {I}{S}{P}y{B}}. J Appl
+  Crystallogr 48~(Pt 3), 927--932.
+
+\bibitem[{{Gatan, Inc}(2018)}]{Latitude}
+{Gatan, Inc}, 2018. 3{{D}} tomography acquisition software.
+\newline\urlprefix\url{http://www.gatan.com/products/tem-imaging-spectroscopy/3d-tomography-acquisition-software}
+
+\bibitem[{Grant and Grigorieff(2015)}]{Grant2015:unblur}
+Grant, T., Grigorieff, N., May 2015. {{M}easuring the optimal exposure for
+  single particle cryo-{E}{M} using a 2.6 {\AA} reconstruction of rotavirus
+  {V}{P}6}. Elife 4, e06980.
+
+\bibitem[{Kuhlbrandt(2014{\natexlab{a}})}]{kuhlbrandt2014a}
+Kuhlbrandt, W., Mar 2014{\natexlab{a}}. {{B}iochemistry. {T}he resolution
+  revolution}. Science 343~(6178), 1443--1444.
+
+\bibitem[{Kuhlbrandt(2014{\natexlab{b}})}]{Kuhlbrandt2014b}
+Kuhlbrandt, W., Aug 2014{\natexlab{b}}. {{C}ryo-{E}{M} enters a new era}. Elife
+  3, e03678.
+
+\bibitem[{Li et~al.(2015)Li, Zheng, Agard, and Cheng}]{Li2015}
+Li, X., Zheng, S., Agard, D.~A., Cheng, Y., Nov 2015. {{A}synchronous data
+  acquisition and on-the-fly analysis of dose fractionated cryo{E}{M} images by
+  {U}{C}{S}{F}{I}mage}. J. Struct. Biol. 192~(2), 174--178.
+
+\bibitem[{Mastronarde(2005)}]{Mastronarde2005}
+Mastronarde, D.~N., Oct 2005. {{A}utomated electron microscope tomography using
+  robust prediction of specimen movements}. J. Struct. Biol. 152~(1), 36--51.
+
+\bibitem[{Murshudov et~al.(1997)Murshudov, Vagin, and
+  Dodson}]{Murshudov1997:refmac}
+Murshudov, G.~N., Vagin, A.~A., Dodson, E.~J., May 1997. {{R}efinement of
+  macromolecular structures by the maximum-likelihood method}. Acta
+  Crystallogr. D Biol. Crystallogr. 53~(Pt 3), 240--255.
+
+\bibitem[{Nickell et~al.(2005)Nickell, Forster, Linaroudis, Net, Beck, Hegerl,
+  Baumeister, and Plitzko}]{Nickell2005}
+Nickell, S., Forster, F., Linaroudis, A., Net, W.~D., Beck, F., Hegerl, R.,
+  Baumeister, W., Plitzko, J.~M., Mar 2005. {{T}{O}{M} software toolbox:
+  acquisition and analysis for electron tomography}. J. Struct. Biol. 149~(3),
+  227--234.
+
+\bibitem[{Patwardhan and Lawson(2016)}]{Patwardhan2016:databasesEM}
+Patwardhan, A., Lawson, C.~L., 2016. {{D}atabases and {A}rchiving for
+  {C}ryo{E}{M}}. Meth. Enzymol. 579, 393--412.
+
+\bibitem[{Pichkur et~al.(2018)Pichkur, Baimukhametov, Teslyuk, Orekhov,
+  Kamyshinsky, Chesnokov, Ilyin, Vasiliev, and Velikhov}]{Pichkur2018}
+Pichkur, E., Baimukhametov, T., Teslyuk, A., Orekhov, A., Kamyshinsky, R.,
+  Chesnokov, Y., Ilyin, V., Vasiliev, A., Velikhov, V., 2018. Towards
+  on-the-fly cryo-electron microscopy data processing by high performance data
+  analysis. Journal of Physics: Conference Series 955~(1), 012005.
+\newline\urlprefix\url{http://stacks.iop.org/1742-6596/955/i=1/a=012005}
+
+\bibitem[{Saibil et~al.(2015)Saibil, Grunewald, and Stuart}]{Saibil2015}
+Saibil, H.~R., Grunewald, K., Stuart, D.~I., Jan 2015. {{A} national facility
+  for biological cryo-electron microscopy}. Acta Crystallogr. D Biol.
+  Crystallogr. 71~(Pt 1), 127--135.
+
+\bibitem[{Sorzano et~al.(2018)Sorzano, Fernandez-Gimenez, Peredo-Robinson,
+  Vargas, Majtner, Caffarena, Oton, Vilas, de~la Rosa-Trevin, Melero,
+  Gomez-Blanco, Cuenca-Alba, del Cano, Conesa, Marabini, and
+  Carazo}]{sorzano2018}
+Sorzano, C., Fernandez-Gimenez, E., Peredo-Robinson, V., Vargas, J., Majtner,
+  T., Caffarena, G., Oton, J., Vilas, J., de~la Rosa-Trevin, J., Melero, R.,
+  Gomez-Blanco, J., Cuenca-Alba, J., del Cano, L., Conesa, P., Marabini, R.,
+  Carazo, J., 2018. Blind estimation of {{D}}{{E}}{{D}} camera gain in
+  {{E}}lectron {{M}}icroscopy. J. Structural Biology (in press) .
+
+\bibitem[{Suloway et~al.(2009)Suloway, Shi, Cheng, Pulokas, Carragher, Potter,
+  Zheng, Agard, and Jensen}]{Suloway2009}
+Suloway, C., Shi, J., Cheng, A., Pulokas, J., Carragher, B., Potter, C.~S.,
+  Zheng, S.~Q., Agard, D.~A., Jensen, G.~J., Jul 2009. {{F}ully automated,
+  sequential tilt-series acquisition with {L}eginon}. J. Struct. Biol. 167~(1),
+  11--18.
+
+\bibitem[{{Thermo Fisher Scientific}(2018)}]{EPU}
+{Thermo Fisher Scientific}, 2018. {{E}}{{P}}{{U}} for life sciences.
+\newline\urlprefix\url{https://www.fei.com/software/epu/}
+
+\bibitem[{{Tietz, GmbH}(2018)}]{emmenu}
+{Tietz, GmbH}, 2018. {{E}}{{M}}-{{M}}enu.
+\newline\urlprefix\url{http://www.tvips.com/imaging-software/em-menu/}
+
+\bibitem[{Zheng et~al.(2016)Zheng, Palovcak, Armache, Cheng, and
+  Agard}]{Zheng2016:motioncor2}
+Zheng, S., Palovcak, E., Armache, J.-P., Cheng, Y., Agard, D., 2016.
+  Anisotropic correction of beam-induced motion for improved single-particle
+  electron cryo-microscopy. bioRxiv .
+\newline\urlprefix\url{https://www.biorxiv.org/content/early/2016/07/04/061960}
+
+\bibitem[{Zheng et~al.(2007)Zheng, Keszthelyi, Branlund, Lyle, Braunfeld,
+  Sedat, and Agard}]{Zheng2007}
+Zheng, S.~Q., Keszthelyi, B., Branlund, E., Lyle, J.~M., Braunfeld, M.~B.,
+  Sedat, J.~W., Agard, D.~A., Jan 2007. {{U}{C}{S}{F} tomography: an integrated
+  software suite for real-time electron microscopic tomographic data
+  collection, alignment, and reconstruction}. J. Struct. Biol. 157~(1),
+  138--147.
+
+\end{thebibliography}
+
+% flatex input end: [scipionbox.bbl]
+%FLATEX-REM:\bibliographystyle{elsart-harv}
+%FLATEX-REM:\bibliography{large}
+
+\clearpage
+%\input{listOfFigures.tex}
+
+\newpage
+%tables
+%\input{numberImagesDataSet.tex}
+%%%%%\input{markersLegend.tex}
+%\input{numberImagesUpload.tex}
+%\newpage
+
+
+
+\end{document}
+
+% flatex input end: [scipionbox.tex]
