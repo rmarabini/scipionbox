@@ -1,7 +1,7 @@
 \section{Main Modifications introduced in  \scipion: Streaming and Metaprotocols}
 \label{overall}
 
-In the following we describe the most important modifications made to \scipion to facilitate its deployment and execution in centralized facilities.
+In the following we describe the most important modifications made to \scipion to facilitate its deployment and execution in centralized facilities. The section ends with a very brief description of \scipion design and architecture that highlights the most interesting features of this image processing framework.
 
 \subsection{Stream Processing}
 
@@ -13,7 +13,7 @@ In this way, a new level of parallelization has been reached since the  data gen
 Using threads, a programmer can effectively create two or more tasks that run at the same time and share the protocol resources (e.g. memory). 
 %is based on periodic updates of the protocol input and output data during the image processing. 
 %Each protocol execution in \scipion is an independent process that can create processing threads. 
-Each protocol that works in streaming mode has one of its threads monitoring input and updating output  data while other threads take care of the data processing. This clear separation between data access and data processing marks an important difference between running a script or using \scipion, since it facilitates a form of computing in which several jobs are executed  concurrently, instead of sequentially. Moreover, \scipion workflow engine allows users to modify the workflow on the fly without modifying a single line of code.
+Each protocol that works in streaming mode has one of its threads monitoring input and updating output  data while other threads take care of the data processing. This clear separation between data access and data processing marks an important difference between running a script or using \scipion, since it facilitates a form of computing in which several jobs are executed  concurrently, instead of sequentially. %Moreover, \scipion workflow engine allows users to modify the workflow on the fly without modifying a single line of code.
 %In practice, the latter follows  a more general and extensible approach that allows users to modify the workflow on the fly without modifying a single code line. %Moreover, it also allows to quickly develop new workflows .
 
 %Since allow to a form of computing in which several computations are executed during overlapping time periods—concurrently—instead of sequentially
@@ -35,7 +35,34 @@ The first type of metaprotocols are called \emph{monitors} and are used to produ
 The second set of metaprotocols are grouped under the name \emph{consensus}. For a given logical step (for example, particle picking) these protocols check 
 the consistency of the output datasets obtained from the same input data using different algorithms. Continuing with the particle picking example, \protocol{consensus picking} will compare, at a given instant, the particles selected for each one of the executed particle-picking algorithms and produce as output a particle set containing those particles selected by most of the algorithms.
 
-We would like to finish this section stressing that despite the modifications introduced to \scipion data and process model, the framework is backward compatible and keeps providing full data provenance. In other words, \scipion provides detailed information about the origin of the data  and the process to generate it.
+%It is worth mentioning that despite the modifications introduced to \scipion data and process model, the framework is backward compatible and keeps providing full data provenance.% In other words, \scipion provides detailed information about the origin of the data  and the process to generate it.
+
+\subsection{\scipion Design and Architecture}
+
+We would like to finish this section commenting on some of \scipion architecture design decisions that differentiate \scipion from another image processing frameworks. At the software architectural level,  the greatest difference 
+between \scipion and the other EM image processing packages mentioned in the introduction 
+is that  \scipion pays special attention to define abstraction layers to simplify maintenance
+and extensibility, and that follows a strict workflow approach. A few examples will illustrate the main advantages of this design.
+
+To create a new protocol in Scipion, only a Python script needs to be developed. From this script, the system will discover the new protocol and will automatically build
+a form and store the protocol related information in a database.
+\scipion protocol developers must certainly know \scipion conventions
+but they do not need to modify or even understand the existing code.
+In  \scipion next version, the abstraction will be increased
+since protocols will be implemented as plug-ins,
+that is, independent small python scripts  that add functionality to the main
+\scipion application. The plug-in approach allows parallel development. That is,  
+since protocols are implemented independently from the main application
+they can be developed and released in parallel by different teams. In this way, support for a new version of \textit{Relion} does not require a new \scipion release but
+a release of the independent \textit{Relion} plug-in
+
+\scipion follows a pure workflow approach and therefore, implements pipelines and describes them as a set of interconnected steps (or protocols). In a workflow approach, users (including microscope staff) can reasonably be expected to modify the paths and incorporate new steps using a GUI. On the contrary, software packages that do not make this separation produce workflows that, in general, are more challenging to create or modify for non programmers. 
+
+Another advantage of a clear separation between steps and relationships 
+is the improvement of load valance, reproducibility and  provenance (process of tracing and recording the origins of data and its movement between protocols). The first step in a \scipion workflow execution
+is to store in a database each of the protocols to be executed as well as how 
+outputs of one protocol are attached to the inputs of another protocol. Then, a workflow engine analyzes the stored data and using as constrain the number of CPUs assigned by the user to the workflow, optimizes the execution, that is, try to execute as many protocols in parallel as possible. Obviously, the data stored in the database  have enough information to execute each step and therefore guaranties reproducibility and provenance.
+
 
 
 %for any object created by a  protocol, \scipion always annotate how this object has been generated by detailing: the steps, input data and parameters used in the computation. Data provenance guaranties reproducibility and traceability. %Since provenance is solved by Scipion and not Scipionbox we will not discuss here how it is been achieved. We just note that, before choosing which data has to be stored, it is necessary to define how these data have to be structured so that they can be later recovered and understood . %This abstract modeling of the data also simplifies the software interoperability offered by Scipion.

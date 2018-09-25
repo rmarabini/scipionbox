@@ -12,7 +12,7 @@ At the beginning of 2016, the Cryo-EM facility at \scilifelab became one of the 
 framework. In particular, they were interested in the possibility of modifying easily the processing workflow as well as provide users and staff with  graphical tools for data analysis and quick feedback regarding the data collection.
 Although initially the same setup script used at
 CNB was adopted, a new one was developed to fully satisfy the facility
-requirements. In the following sections we will briefly describe the computational infrastructure at the \scilifelab node and the implementation of a Session Wizard to automate the initial setup while fetching information from other sources external to \scipion. 
+requirements. In the following sections we will briefly describe the computational infrastructure at the \scilifelab node and the implementation of a Session Wizard to automate the initial setup while fetching information from other sources external to \scipion. %(In this contest wizard refers to a helper script which guide users through a certain process.)
 %[** thalos falcon III, titan k2 and falcon III]
 
 \subsubsection{Network Setup and IT Infrastructure}
@@ -37,7 +37,7 @@ There is also a dedicated download server which has access to the NFS export. Th
 All these computers are connected to a 10 GbE network switch. The only machine accessible from the Internet is the data download server, which has a dual-port 10 GbE network adapter (one used for the internal network, one for the external network). %Both the K2 computer and the Falcon-III dedicated storage server had one unused 10GbE interface that could be used to connect them to our private network, without having to interfere with the default setup.
 
 \subsubsection{Additional Software Developments: \emph{Session Wizard}}
-In order to interface \scipion with the microscope infrastructure an upgraded version of the original script developed at CNB was used. Unfortunately, it was difficult to reuse the existing code due to a different folder structure and, more important, a different approach to user and microscope management. To address the new set of requirements, a new wizard has been development at \scilifelab. (In this contest wizard refers to a helper script which guide users through a certain process.) %For this new wizard, a basic data model was designed representing the current processing and data organization at \scilifelab. %The model is composed by the following entities:
+In order to interface \scipion with the microscope infrastructure an upgraded version of the original script developed at CNB was used. Unfortunately, it was difficult to reuse the existing code due to a different folder structure and, more important, a different approach to user and microscope management. To address the new set of requirements, a new wizard has been development at \scilifelab. %(In this contest wizard refers to a helper script which guide users through a certain process.) %For this new wizard, a basic data model was designed representing the current processing and data organization at \scilifelab. %The model is composed by the following entities:
 
 %[** quitar modelo de datos]
 %\begin{itemize}
