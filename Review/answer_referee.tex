@@ -21,6 +21,7 @@
 \def\hserver{\textit{HTML-Server}\xspace}
 \def\scipion{\textit{Scipion}\xspace}
 \def\emadmin{\textit{EMAdmin}\xspace}
+\def\python{\textit{Python}\xspace}
 
 \def\epu{\textit{EPU}\xspace}
 \def\scilifelab{SciLifeLab\xspace}
@@ -101,7 +102,7 @@ Q \the\numexpr\value{pointcounter}-1\relax.1: Page 9: ``...Explain what EPU is..
 
 Q \the\numexpr\value{pointcounter}-1\relax.1: Page 10: ``Please explain, what ciphers are''. Following reviewer 2 recommendations this section has been simplified and the sentence containing the word ``ciphers'' has been deleted. 
 
-Q \the\numexpr\value{pointcounter}-1\relax.2: Page 16: ``The sentence -They can potentially play with the pipeline in ways that are not possible when having a programmer writing the code for them.- Is not understandable on first reading.''. We have rewriting the paragraph as:
+Q \the\numexpr\value{pointcounter}-1\relax.2: Page 16: ``The sentence -They can potentially play with the pipeline in ways that are not possible when having a programmer writing the code for them.- Is not understandable on first reading.''. We have rewritten the paragraph as:
 
 
 \begin{quote}
@@ -116,35 +117,40 @@ Q \the\numexpr\value{pointcounter}-1\relax.2: Page 16: ``The sentence -They can 
 \point{The authors claim that the strength of their software is in its ability to process data while being collected; a point that is not well-addresses by other software. At the same time, they acknowledge that UCSFImage4, Focus, and Relion are software packages similar to Scipion capable of processing data in a high-throughput manner while new data is being acquired at the microscope. A clear differentiation between Scipion and these software packages was lacking in this manuscript. What advantages Scipion provide over the above mentioned software packages?}
 
 
-\reply Since there is already a published manuscript describing \scipion, in the present manuscript  we decided to focus on \scipion features that have been specifically developed for working at EM facilities (e.g. streaming). The main reasons why \scipion is better suited than other packages for EM work is rooted in \scipion main design rather than the new facilities related features. Nevertheless, the reviewer is right in pointing out than a ``A clear differentiation between Scipion and these software packages was lacking in this manuscript''. Therefore, we have decided to add the following subsection to the manuscript
+\reply %Since there is already a published manuscript describing \scipion, in the present manuscript  we decided to focus on \scipion features that have been specifically developed for working at EM facilities (e.g. streaming). The main reasons why \scipion is better suited than other packages for EM work is rooted in \scipion main design, complimented with the new facilities related features. Nevertheless, 
+The reviewer is right in pointing out than a ``A clear differentiation between \scipion and these software packages was lacking in this manuscript''. Therefore, we have decided to add the following subsection to the manuscript
 
 \begin{quote}
 
 \textbf{\scipion Design and Architecture}
 
-We would like to finish this section commenting on some of \scipion architecture design decisions that differentiate \scipion from another image processing frameworks. At the software architectural level,  the greatest difference 
+We would like to finish this section commenting on some of \scipion  design decisions that differentiate \scipion from other image processing frameworks. \scipion
+is fully oriented to integrate existing
+EM software and therefore the versatility and number of possible steps
+combination is huge. Additionally, \scipion takes care of keeping a 
+rigorous traceability and reproducibility as well as to provide an API (application programming interface) to allow the integration  with already existing LIMS systems. At the software architectural level,  the greatest difference 
 between \scipion and the other EM image processing packages mentioned in the introduction 
 is that  \scipion pays special attention to define abstraction layers to simplify maintenance
-and extensibility, and that follows a strict workflow approach. A few examples will illustrate the main advantages of this design.
+and extensibility and follows a strict workflow approach. A few examples will illustrate the main advantages of this approach.
 
-To create a new protocol in Scipion, only a Python script needs to be developed. From this script, the system will discover the new protocol and will automatically build
+To create a new protocol in \scipion, a single \python file needs to be created. From this file, the system will discover the new protocol and will automatically build
 a form and store the protocol related information in a database.
 \scipion protocol developers must certainly know \scipion conventions
 but they do not need to modify or even understand the existing code.
 In  \scipion next version, the abstraction will be increased
 since protocols will be implemented as plug-ins,
-that is, independent small python scripts  that add functionality to the main
+that is, independent small \python files  that add functionality to the main
 \scipion application. The plug-in approach allows parallel development. That is,  
 since protocols are implemented independently from the main application
 they can be developed and released in parallel by different teams. In this way, support for a new version of \textit{Relion} does not require a new \scipion release but
 a release of the independent \textit{Relion} plug-in
 
-\scipion follows a pure workflow approach and therefore, implements pipelines and describes them as a set of interconnected steps (or protocols). In a workflow approach, users (including microscope staff) can reasonably be expected to modify the paths and incorporate new steps using a GUI. On the contrary, software packages that do not make this separation produce workflows that, in general, are more challenging to create or modify for non programmers. 
+\scipion follows a pure workflow approach and therefore, implements pipelines and describes them as a set of interconnected steps (or protocols). In a workflow approach, users (including microscope staff) can reasonably be expected to modify the paths and incorporate new steps using a GUI (graphic user interface). On the contrary, software packages that do not make this separation produce workflows that, in general, are more challenging to create or modify for non programmers. 
 
 Another advantage of a clear separation between steps and relationships 
-is the improvement of load valance, reproducibility and  provenance (process of tracing and recording the origins of data and its movement between protocols). The first step in a \scipion workflow execution
+is the improvement of load balance, reproducibility and  provenance (process of tracing and recording the origins of data and its movement between protocols). The first step in a \scipion workflow execution
 is to store in a database each of the protocols to be executed as well as how 
-outputs of one protocol are attached to the inputs of another protocol. Then, a workflow engine analyzes the stored data and using as constrain the number of CPUs assigned by the user to the workflow, optimizes the execution, that is, try to execute as many protocols in parallel as possible. Obviously, the data stored in the database  have enough information to execute each step and therefore guaranties reproducibility and provenance.
+outputs of one protocol are attached to the inputs of another protocol. Then, a workflow engine analyzes the stored data and, using as constraint the number of CPUs assigned by the user to the workflow, optimizes the execution, that is, tries to execute as many protocols in parallel as possible. Obviously, the data stored in the database  have enough information to execute each step and therefore guarantee reproducibility and provenance. Additionally, \scipion currently exports a JSON (JavaScript Object Notation) file describing the complete preprocessing workflow used, so that it can be fully reproduced and visualized elsewhere.
 
 \end{quote}
 
@@ -178,7 +184,7 @@ Using the HTTP header it is possible to guess the country in which \scipion has 
 is a one to one relationship between the  countries with highest number of \scipion projects and the countries with \scipion based EM facilities. The only exception to the rule is Canada where two of the original \scipion developers are setting up a new facility (McGill University).
 
 Note that, in a effort to report real use and skip test projects, the number of projects in the map refers to the number of non empty \scipion projects updated more than once. That is, 
-\scipion projects that have been opened in at least two different days. Another constraint is that developers computers are filtered out.
+\scipion projects that have been opened in at least two different days. Another constraint is that developers' computers are filtered out.
 \end{quote}
 
 
