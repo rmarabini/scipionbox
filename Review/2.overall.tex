@@ -62,7 +62,7 @@ a release of the independent \textit{Relion} plug-in
 
 \scipion follows a pure workflow approach and therefore, implements pipelines and describes them as a set of interconnected steps (or protocols). In a workflow approach, users (including microscope staff) can reasonably be expected to modify the paths and incorporate new steps using a GUI (graphic user interface). On the contrary, software packages that do not make this separation produce workflows that, in general, are more challenging to create or modify for non programmers. 
 
-Another advantage of a clear separation between steps and relationships 
+Another advantage of the workflow approach 
 is the improvement of load balance, reproducibility and  provenance (process of tracing and recording the origins of data and its movement between protocols). The first step in a \scipion workflow execution
 is to store in a database each of the protocols to be executed as well as how 
 outputs of one protocol are attached to the inputs of another protocol. Then, a workflow engine analyzes the stored data and, using as constraint the number of CPUs assigned by the user to the workflow, optimizes the execution, that is, tries to execute as many protocols in parallel as possible. Obviously, the data stored in the database  have enough information to execute each step and therefore guarantee reproducibility and provenance. Additionally, \scipion currently exports a JSON (JavaScript Object Notation) file describing the complete preprocessing workflow used, so that it can be fully reproduced and visualized elsewhere.
