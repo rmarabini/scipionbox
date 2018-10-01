@@ -1,0 +1,6 @@
+compile with
+
+pdflatex scipionbox
+pdflatex scipionbox
+bibtex scipionbox
+pdflatex scipionbox
